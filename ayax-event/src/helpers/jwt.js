@@ -12,6 +12,7 @@ export const verifyToken = (token) => {
 };
 export const verifyWithJose = async(token) => {
   const secret = new TextEncoder().encode(secretKey);
+  
   const { payload } = await jose.jwtVerify(token, secret);
   return payload;
 };
