@@ -1,5 +1,6 @@
 
 
+import { ObjectId } from "mongodb";
 import database from "../confiq/mongodb";
 import { z } from "zod";
 
@@ -56,18 +57,23 @@ export default class Event {
             },
         };
     }
-    static async findById(id) {
+    static async findById(_id) {
 
-        return await this.collection().findOne(id)
+        return await this.collection().findOne({ _id: new ObjectId(String(_id)) })
     }
     static async findByUserId(userId) {
+        console.log(userId, "userId model");
+        console.log("masuk userId model");
+        
 
-        return await this.collection().findOne(userId)
+        return await this.collection().find({
+            userId: new ObjectId(String(userId))
+        }).toArray()
     }
-    static async findByName(eventname) {
+    // static async findByName(eventname) {
 
-        return await this.collection().findOne(eventname)
-    }
+    //     return await this.collection().findOne(eventname)
+    // }
     static async create(event) {
         EventSchema.parse(event);
 
