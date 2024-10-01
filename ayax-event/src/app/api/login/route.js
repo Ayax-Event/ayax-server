@@ -7,6 +7,8 @@ import { cookies } from "next/headers";
 export async function POST(response) {
     try {
         const { email, password } = await response.json();
+        console.log(email, password,"<<<<<<<<<<<<<<<<<<<<<<<<<pass");
+
         const user = await User.findByEmail(email);
         console.log(user, "<<<<<<<<< user login");
 
@@ -18,19 +20,21 @@ export async function POST(response) {
         const payload = {
             _id: user._id.toString(),
         };
-        console.log(payload, "<<<<<<<<<<<<< payload login");
+        // console.log(payload, "<<<<<<<<<<<<< payload login");
 
         const accessToken = signToken(payload);
+        console.log(accessToken, "access token");
 
         const cookie = cookies().set("Authorization", `Bearer ${accessToken}`);
-        console.log(cookie, "<<<<<<<< cookies login server");
+        // const token = localStorage.setItem("access_token", accessToken)
+        // console.log(token, "<<<<<<<< cookies login server");
 
         return Response.json({ accessToken });
     } catch (error) {
-        console.log(error, "<<<<< error");
+        // console.log(error, "<<<<< error");
 
         let message = error.message || "Internal server error";
-        let status= error.status || 500;
+        let status = error.status || 500;
         if (error instanceof z.ZodError) {
             console.log(error.errors[0], "<<<<<<<<<< error zod");
 

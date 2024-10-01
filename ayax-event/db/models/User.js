@@ -4,12 +4,12 @@ import { z } from "zod";
 import { hashPassword } from "@/helpers/bcrypt";
 
 const UserSchema = z.object({
-  name: z.string().min(1),
-  username: z.string().min(1),
+  name: z.string().min(3),
+  username: z.string().min(3),
   email: z.string().email().min(10),
-  password: z.string().min(5),
-  profilepict: z.string(),
-  location: z.string().nullable(),
+  password: z.string().min(8),
+  profilepict: z.string().optional(),
+  location: z.string().optional(),
   role: z.string(),
   createdAt: z.date().min(new Date()),
   updatedAt: z.date().min(new Date())
