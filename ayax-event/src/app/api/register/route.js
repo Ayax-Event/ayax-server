@@ -5,8 +5,9 @@ export async function POST(response) {
     try {
         console.log(response, "response register model");
 
-        const { name, username, email, password, profilepict, location } = await response.json();
-        const role =  "reguler"
+        const { name, username, email, password } = await response.json();
+        const role = "user"
+        const profilepict = "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
         const res = await User.create({
             name,
             username,
@@ -18,8 +19,7 @@ export async function POST(response) {
             createdAt: new Date(),
             updatedAt: new Date()
         });
-        console.log(res, "<<<<<<<<<<<<<<res register");
-
+        // console.log(res, "<<<<<<<<<<<<<<res register");
         return Response.json({
             message: `Success registered with username: ${username}`,
         });

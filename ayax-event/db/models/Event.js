@@ -125,7 +125,7 @@ export default class Event {
       updatedAt: new Date()
     }
     // console.log(newEvent);
-    EventSchema.parse(newEvent);
+    // EventSchema.parse(newEvent);
     // console.log(newEvent, "<<<<<<<<<<<<<<< newEvent before insert db");
     return await this.collection().insertOne(newEvent);
   }
