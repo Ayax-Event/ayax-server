@@ -1,4 +1,3 @@
-
 import database from "../confiq/mongodb";
 import { z } from "zod";
 import { hashPassword } from "@/helpers/bcrypt";
@@ -10,32 +9,26 @@ const UserSchema = z.object({
   email: z.string().email().min(10),
   password: z.string().min(8),
   profilepict: z.string().optional(),
-  location: z.string().optional(),
+  location: z.union([z.string(), z.null()]).default(null),
   role: z.string(),
   createdAt: z.date().min(new Date()),
-  updatedAt: z.date().min(new Date())
+  updatedAt: z.date().min(new Date()),
 });
 export default class User {
   static collection() {
     return database.collection("users");
   }
   static async create(user) {
-    try {
-      UserSchema.parse(user);
-      user.password = hashPassword(user.password);
+    UserSchema.parse(user);
+    user.password = hashPassword(user.password);
 
-      const uniqueUser = await this.collection().findOne({
-        $or: [{ email: user.email }, { username: user.username }],
-      });
-      if (uniqueUser) {
-        throw { message: "Email/Username has been used", status: 400 };
-      }
-      return await this.collection().insertOne(user);
-    } catch (error) {
-      console.log(error,"<<<<<<<<<<<<< error register");
-      
+    const uniqueUser = await this.collection().findOne({
+      $or: [{ email: user.email }, { username: user.username }],
+    });
+    if (uniqueUser) {
+      throw { message: "Email/Username has been used", status: 400 };
     }
-
+    return await this.collection().insertOne(user);
   }
   static async findByEmail(email) {
     return await this.collection().findOne({ email });
@@ -44,6 +37,26 @@ export default class User {
     return await this.collection().findOne({ email });
   }
   static async findById(_id) {
-    return await this.collection().findOne({ _id: new ObjectId(_id) });
+    try {
+      const result = await this.collection()
+        .aggregate([
+          {
+            $match: {
+              _id: new ObjectId(_id), // Ensure _id is converted to ObjectId
+            },
+          },
+          {
+            $project: {
+              password: 0, // Exclude password field
+            },
+          },
+        ])
+        .toArray(); // Use toArray to get the result as an array
+
+      return result[0]; // Assuming you want to return a single document
+    } catch (error) {
+      console.error("Error in findById:", error);
+      throw error;
+    }
   }
 }

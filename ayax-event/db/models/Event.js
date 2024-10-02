@@ -10,6 +10,7 @@ const EventSchema = z.object({
   tags: z.string().optional(),
   thumbnail: z.string(),
   images: z.string(),
+  location: z.string(),
   dateOfEvent: z.string(),
   isFree: z.boolean().default(false),
   createdAt: z.date(),
@@ -68,36 +69,33 @@ export default class Event {
       },
     };
   }
+
   static async findById(_id) {
     const pipeline = [
       {
-        $match:
-        {
-          _id: new ObjectId(String(_id))
-        }
+        $match: {
+          _id: new ObjectId(String(_id)),
+        },
       },
       {
-        $lookup:
-        {
+        $lookup: {
           from: "users",
           localField: "userId",
           foreignField: "_id",
-          as: "creator"
-        }
+          as: "creator",
+        },
       },
       {
-        $project:
-        {
-          "creator.password": 0
-        }
+        $project: {
+          "creator.password": 0,
+        },
       },
       {
-        $unwind:
-        {
-          path: "$creator"
-        }
-      }
-    ]
+        $unwind: {
+          path: "$creator",
+        },
+      },
+    ];
     return await this.collection().aggregate(pipeline).next();
   }
 
@@ -109,24 +107,21 @@ export default class Event {
       .toArray();
   }
   static async create(body, userId) {
-    // console.log(body, "<<<<<<<</<<<<< event model create");
-    // console.log(userId, "userId model");
     const newEvent = {
       eventName: body.eventName,
       userId: new ObjectId(userId),
       categoryId: body.categoryId,
       description: body.description,
+      location: body.location,
       tags: body.tags,
       thumbnail: body.thumbnail,
       images: body.images,
       dateOfEvent: body.dateOfEvent,
       isFree: true,
       createdAt: new Date(),
-      updatedAt: new Date()
-    }
-    // console.log(newEvent);
-    // EventSchema.parse(newEvent);
-    // console.log(newEvent, "<<<<<<<<<<<<<<< newEvent before insert db");
+      updatedAt: new Date(),
+    };
+
     return await this.collection().insertOne(newEvent);
   }
   static async update(event) {
