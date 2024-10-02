@@ -1,90 +1,101 @@
-
-
 import { ObjectId } from "mongodb";
 import database from "../confiq/mongodb";
 import { z } from "zod";
 
-
 const EventSchema = z.object({
-    eventName: z.string(),
-    userId: z.string(),
-    categoryId: z.string(),
-    description: z.string(),
-    tags: z.string().optional(),
-    thumbnail: z.string(),
-    images: z.string(),
-    dateOfEvent: z.date(),
-    isFree: z.boolean().default(false),
-    createdAt: z.date(),
-    updatedAt: z.date(),
+  eventName: z.string(),
+  userId: z.string(),
+  categoryId: z.string(),
+  description: z.string(),
+  tags: z.string().optional(),
+  thumbnail: z.string(),
+  images: z.string(),
+  dateOfEvent: z.date(),
+  isFree: z.boolean().default(false),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 export default class Event {
-    static collection() {
+  static collection() {
+    return database.collection("events");
+  }
+  static async findAll(page, search, limit, sort, filter) {
+    const itemsPerPage = limit ? Number(limit) : 6;
+    const currentPage = !page ? 1 : Number(page);
+    const skip = (currentPage - 1) * itemsPerPage;
+    let query = {};
 
-        return database.collection("events")
+    if (Object.keys(search).length > 0) {
+      Object.keys(search).forEach((key) => {
+        query[key] = { $regex: search[key], $options: "si" };
+      });
     }
-    static async findAll(page, search, limit, sort) {
-        const itemsPerPage = limit ? Number(limit) : 6;
-        const currentPage = !page ? 1 : Number(page);
-        const skip = (currentPage - 1) * itemsPerPage;
-        let query = {};
-        if (search) {
-            query = {
-                eventName: {
-                    $regex: search,
-                    $options: "si",
-                },
-            };
-        }
-        console.log(query, "<<<<<<<<<<<<<<query params models events");
 
-        const sortOrder = sort === "desc" ? -1 : 1;
-
-        const totalData = await this.collection().countDocuments(query);
-        const totalPages = Math.ceil(totalData / itemsPerPage);
-
-        const data = await this.collection().find(query).sort({ name: sortOrder }).skip(skip).limit(itemsPerPage).toArray();
-        // console.log(data, "<<<<<<<<<<<<< data models event");
-
-        return {
-            data, pagination: {
-                currentPage,
-                totalPages,
-                totalData,
-                hasPrevPage: currentPage > 1,
-                hasNextPage: currentPage < totalPages,
-            },
-        };
+    if (Object.keys(filter).length > 0) {
+      Object.keys(filter).forEach((key) => {
+        query[key] = filter[key];
+      });
     }
-    static async findById(_id) {
 
-        return await this.collection().findOne({ _id: new ObjectId(String(_id)) })
+    const sortObject = {};
+    if (Object.keys(sort).length > 0) {
+      Object.keys(sort).forEach((key) => {
+        sortObject[key] = sort[key].toLowerCase() === "desc" ? -1 : 1;
+      });
+    } else {
+      sortObject.createdAt = -1;
     }
-    static async findByUserId(userId) {
-        console.log(userId, "userId model");
-        console.log("masuk userId model");
-        
-        return await this.collection().find({
-            userId: new ObjectId(String(userId))
-        }).toArray()
-    }
-    // static async findByName(eventname) {
 
-    //     return await this.collection().findOne(eventname)
-    // }
-    static async create(event) {
-        EventSchema.parse(event);
+    const totalData = await this.collection().countDocuments(query);
+    const totalPages = Math.ceil(totalData / itemsPerPage);
 
-        return await this.collection().insertOne(event).next()
-    }
-    static async update(event) {
-        EventSchema.parse(event);
+    const data = await this.collection()
+      .find(query)
+      .sort(sortObject)
+      .skip(skip)
+      .limit(itemsPerPage)
+      .toArray();
 
-        return await this.collection().updateMany(event).next()
-    }
-    static async delete(event) {
+    return {
+      data,
+      pagination: {
+        currentPage,
+        totalPages,
+        totalData,
+        hasPrevPage: currentPage > 1,
+        hasNextPage: currentPage < totalPages,
+      },
+    };
+  }
+  static async findById(_id) {
+    return await this.collection().findOne({ _id: new ObjectId(String(_id)) });
+  }
+  static async findByUserId(userId) {
+    console.log(userId, "userId model");
+    console.log("masuk userId model");
 
-        return await this.collection().deleteOne(event).next()
-    }
+    return await this.collection()
+      .find({
+        userId: new ObjectId(String(userId)),
+      })
+      .toArray();
+  }
+  // static async findByName(eventname) {
+
+  //     return await this.collection().findOne(eventname)
+  // }
+  static async create(event) {
+    EventSchema.parse(event);
+
+    return await this.collection().insertOne(event).next();
+  }
+  static async update(event) {
+    EventSchema.parse(event);
+
+    return await this.collection().updateMany(event).next();
+  }
+  static async delete(event) {
+    return await this.collection().deleteOne(event).next();
+  }
 }
