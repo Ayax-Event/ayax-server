@@ -42,5 +42,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/api/user-event/:path*"],
+  matcher: ["/api/user-events/:path*"],
 };
