@@ -1,16 +1,18 @@
 
-import { verifyWithJose } from "./jwt";
+import { NextResponse } from "next/server";
+import { verifyWithJose } from "./helpers/jwt";
 import { cookies } from "next/headers";
 
 export async function middleware(request) {
   const authorization = cookies().get("Authorization")?.value;
   console.log(authorization, "<<<<<<<<<<<< auth middleware");
-
-  if (request.nextUrl.pathname.startsWith("/api/wishlists")) {
+  // if (!authCookie) {
+  //   throw new Error("invalid token")
+  // }
+  if (request.nextUrl.pathname.startsWith("/api/event")) {
     if (!authorization) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
-
     const [type, token] = authorization.split(" ");
     if (type !== "Bearer" || !token) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
@@ -27,20 +29,19 @@ export async function middleware(request) {
       });
     } catch (error) {
       console.log(error, "<<<<<<<<<<<<<<< error middlewares");
-
       return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
   }
 
-  if (request.nextUrl.pathname.startsWith("/wishlist")) {
-    if (!authorization) {
-      return Response.redirect(new URL("/login", request.url));
-    }
+  if (!authorization) {
+    return Response.redirect(new URL("/login", request.url));
+  }
+  if (request.nextUrl.pathname.startsWith("/event")) {
   }
 
-  return Response.next();
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/api/wishlists/:path*", "/wishlist"],
+  matcher: ["/api/event/:path*", "/event"],
 };

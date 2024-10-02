@@ -45,7 +45,7 @@ export default class Event {
         const totalPages = Math.ceil(totalData / itemsPerPage);
 
         const data = await this.collection().find(query).sort({ name: sortOrder }).skip(skip).limit(itemsPerPage).toArray();
-        console.log(data, "<<<<<<<<<<<<< data models event");
+        // console.log(data, "<<<<<<<<<<<<< data models event");
 
         return {
             data, pagination: {
@@ -65,7 +65,6 @@ export default class Event {
         console.log(userId, "userId model");
         console.log("masuk userId model");
         
-
         return await this.collection().find({
             userId: new ObjectId(String(userId))
         }).toArray()

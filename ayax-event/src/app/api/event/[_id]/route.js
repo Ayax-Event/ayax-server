@@ -3,7 +3,7 @@ import Event from "../../../../../db/models/Event";
 
 export async function GET(request, { params }) {
     try {
-        const  _id  = params._id;
+        const _id = params._id;
 
         const event = await Event.findById(_id);
         if (!event) {
@@ -18,3 +18,4 @@ export async function GET(request, { params }) {
         return Response.json({ message }, { status });
     }
 }
+
