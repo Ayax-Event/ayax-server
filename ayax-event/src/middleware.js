@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import { verifyWithJose } from "./helpers/jwt";
 import { cookies } from "next/headers";
@@ -9,7 +8,7 @@ export async function middleware(request) {
   // if (!authCookie) {
   //   throw new Error("invalid token")
   // }
-  if (request.nextUrl.pathname.startsWith("/api/event")) {
+  if (request.nextUrl.pathname.startsWith("/api/user-events")) {
     if (!authorization) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
     }
@@ -33,15 +32,15 @@ export async function middleware(request) {
     }
   }
 
-  if (!authorization) {
-    return Response.redirect(new URL("/login", request.url));
-  }
-  if (request.nextUrl.pathname.startsWith("/event")) {
-  }
+  // if (!authorization) {
+  //   return Response.redirect(new URL("/login", request.url));
+  // }
+  // if (request.nextUrl.pathname.startsWith("/event")) {
+  // }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/api/event/:path*", "/event"],
+  matcher: ["/api/user-event/:path*"],
 };
