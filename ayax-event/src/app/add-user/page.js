@@ -1,9 +1,9 @@
 import { SidebarDemo } from "@/components/Sidebar";
 
 
-export default function Home() {
+export default function AddUser() {
   return (
-    <div >
+    <div>
       <SidebarDemo/>
     </div>
   );
