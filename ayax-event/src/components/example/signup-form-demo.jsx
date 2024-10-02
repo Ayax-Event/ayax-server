@@ -1,11 +1,9 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
 
 export default function SignupFormDemo() {
   const [user, setUser] = useState({ email: "", password: "" });
@@ -22,16 +20,15 @@ export default function SignupFormDemo() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/api/login`, {
+      const response = await fetch(`http://localhost:3001/api/login`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
           "Content-Type": "application/json",
         },
       });
-      const data = await response.json();
       if (!response.ok) {
-        throw data;
+        throw await response.json();
       }
       router.push("/");
     } catch (err) {
@@ -47,16 +44,16 @@ export default function SignupFormDemo() {
           <div className="flex justify-center mb-4">
             <img src="https://ik.imagekit.io/axellgadiel/image.png?updatedAt=1727850866110" alt="Signup Image" className="w-32 h-32 object-cover rounded-full" />
           </div>
-          Welcome to Ayax CMS
+          Welcome to Ayax System
         </h2>
-        <form className="my-8" onChange={handleChange} onSubmit={handleSubmit}>
+        <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" placeholder="Input your email here" type="email" />
+            <Input id="email" name="email" placeholder="Input your email here" type="email" onChange={handleChange} value={user.email} />
           </LabelInputContainer>
-          <LabelInputContainer onChange={handleChange} className="mb-4">
+          <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" placeholder="••••••••" type="password" />
+            <Input id="password" name="password" placeholder="••••••••" type="password" onChange={handleChange} value={user.password} />
           </LabelInputContainer>
 
           <button

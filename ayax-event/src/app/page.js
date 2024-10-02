@@ -1,9 +1,10 @@
+import { SidebarDemo } from "@/components/Sidebar";
 
 
 export default function Home() {
   return (
-    <div>
-     <text>homepage</text>
+    <div >
+      <SidebarDemo/>
     </div>
   );
 }
