@@ -3,9 +3,12 @@ import Event from "../../../../../db/models/Event";
 
 export async function GET(request, { params }) {
     try {
+        console.log(params._id, "<<<<<<<<<<<< api event id");
+
         const _id = params._id;
 
         const event = await Event.findById(_id);
+        console.log(event, "<<<<<<<<<<<<<<< eventName");
         if (!event) {
             throw { message: "Event not found", status: 404 };
         }

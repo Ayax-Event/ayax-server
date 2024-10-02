@@ -69,8 +69,41 @@ export default class Event {
     };
   }
   static async findById(_id) {
-    return await this.collection().findOne({ _id: new ObjectId(String(_id)) });
+    // console.log(_id,"<<<<<<<<< id model event");
+    
+    const pipeline = [
+      {
+        $match:
+          {
+            _id: new ObjectId (String(_id))
+          }
+      },
+      {
+        $lookup:
+          {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "creator"
+          }
+      },
+      {
+        $project:
+          {
+            "creator.password": 0
+          }
+      },
+      {
+        $unwind:
+          {
+            path: "$creator"
+          }
+      }
+    ]
+    return await this.collection().aggregate(pipeline).next();
   }
+
+
   static async findByUserId(userId) {
     return await this.collection()
       .find({
