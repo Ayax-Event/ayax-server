@@ -13,9 +13,13 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export default function SidebarWithTable() {
+    const handleLogout = () => {
+        document.cookie =
+          "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      };
   const links = [
     {
-      label: "home",
+      label: "Home",
       href: "/",
       icon: (
         <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
@@ -37,9 +41,10 @@ export default function SidebarWithTable() {
     },
     {
       label: "Logout",
-      href: "#",
+      href: "",
       icon: (
-        <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconArrowLeft onClick={handleLogout} className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        
       ),
     },
   ];
@@ -47,7 +52,7 @@ export default function SidebarWithTable() {
 
   return (
   
-      <Sidebar open={open} setOpen={setOpen}>
+      <Sidebar open={open} setOpen={setOpen} className="h-screen">
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <Logo /> : <LogoIcon />}
