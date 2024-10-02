@@ -72,9 +72,6 @@ export default class Event {
     return await this.collection().findOne({ _id: new ObjectId(String(_id)) });
   }
   static async findByUserId(userId) {
-    console.log(userId, "userId model");
-    console.log("masuk userId model");
-
     return await this.collection()
       .find({
         userId: new ObjectId(String(userId)),
