@@ -4,13 +4,13 @@ import { z } from "zod";
 
 const EventSchema = z.object({
   eventName: z.string(),
-  userId: z.string(),
+  userId: z.instanceof(ObjectId),
   categoryId: z.string(),
   description: z.string(),
   tags: z.string().optional(),
   thumbnail: z.string(),
   images: z.string(),
-  dateOfEvent: z.date(),
+  dateOfEvent: z.string(),
   isFree: z.boolean().default(false),
   createdAt: z.date(),
   updatedAt: z.date(),
@@ -69,40 +69,37 @@ export default class Event {
     };
   }
   static async findById(_id) {
-    // console.log(_id,"<<<<<<<<< id model event");
-    
     const pipeline = [
       {
         $match:
-          {
-            _id: new ObjectId (String(_id))
-          }
+        {
+          _id: new ObjectId(String(_id))
+        }
       },
       {
         $lookup:
-          {
-            from: "users",
-            localField: "userId",
-            foreignField: "_id",
-            as: "creator"
-          }
+        {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "creator"
+        }
       },
       {
         $project:
-          {
-            "creator.password": 0
-          }
+        {
+          "creator.password": 0
+        }
       },
       {
         $unwind:
-          {
-            path: "$creator"
-          }
+        {
+          path: "$creator"
+        }
       }
     ]
     return await this.collection().aggregate(pipeline).next();
   }
-
 
   static async findByUserId(userId) {
     return await this.collection()
@@ -111,14 +108,26 @@ export default class Event {
       })
       .toArray();
   }
-  // static async findByName(eventname) {
-
-  //     return await this.collection().findOne(eventname)
-  // }
-  static async create(event) {
-    EventSchema.parse(event);
-
-    return await this.collection().insertOne(event).next();
+  static async create(body, userId) {
+    // console.log(body, "<<<<<<<</<<<<< event model create");
+    // console.log(userId, "userId model");
+    const newEvent = {
+      eventName: body.eventName,
+      userId: new ObjectId(userId),
+      categoryId: body.categoryId,
+      description: body.description,
+      tags: body.tags,
+      thumbnail: body.thumbnail,
+      images: body.images,
+      dateOfEvent: body.dateOfEvent,
+      isFree: true,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+    // console.log(newEvent);
+    EventSchema.parse(newEvent);
+    // console.log(newEvent, "<<<<<<<<<<<<<<< newEvent before insert db");
+    return await this.collection().insertOne(newEvent);
   }
   static async update(event) {
     EventSchema.parse(event);
