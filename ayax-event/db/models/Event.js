@@ -5,7 +5,7 @@ import { z } from "zod";
 const EventSchema = z.object({
   eventName: z.string(),
   userId: z.instanceof(ObjectId),
-  categoryId: z.string(),
+  categoryId: z.instanceof(ObjectId),
   description: z.string(),
   tags: z.string().optional(),
   thumbnail: z.string(),
@@ -35,7 +35,11 @@ export default class Event {
 
     if (Object.keys(filter).length > 0) {
       Object.keys(filter).forEach((key) => {
-        query[key] = filter[key];
+        if (key === "categoryId") {
+          query[key] = new ObjectId(filter[key]);
+        } else {
+          query[key] = filter[key];
+        }
       });
     }
 
@@ -106,11 +110,12 @@ export default class Event {
       })
       .toArray();
   }
+
   static async create(body, userId) {
     const newEvent = {
       eventName: body.eventName,
       userId: new ObjectId(userId),
-      categoryId: body.categoryId,
+      categoryId: new ObjectId(body.categoryId),
       description: body.description,
       location: body.location,
       tags: body.tags,
@@ -121,6 +126,7 @@ export default class Event {
       createdAt: new Date(),
       updatedAt: new Date(),
     };
+    EventSchema.parse(newEvent);
 
     return await this.collection().insertOne(newEvent);
   }

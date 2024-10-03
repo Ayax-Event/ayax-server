@@ -18,6 +18,7 @@ export default class User {
   static collection() {
     return database.collection("users");
   }
+
   static async create(user) {
     UserSchema.parse(user);
     user.password = hashPassword(user.password);
@@ -30,33 +31,40 @@ export default class User {
     }
     return await this.collection().insertOne(user);
   }
+
   static async findByEmail(email) {
     return await this.collection().findOne({ email });
   }
+
   static async findByEmail(email) {
     return await this.collection().findOne({ email });
   }
+
   static async findById(_id) {
     try {
       const result = await this.collection()
         .aggregate([
           {
             $match: {
-              _id: new ObjectId(_id), // Ensure _id is converted to ObjectId
+              _id: new ObjectId(_id),
             },
           },
           {
             $project: {
-              password: 0, // Exclude password field
+              password: 0,
             },
           },
         ])
-        .toArray(); // Use toArray to get the result as an array
+        .toArray();
 
-      return result[0]; // Assuming you want to return a single document
+      return result[0];
     } catch (error) {
       console.error("Error in findById:", error);
       throw error;
     }
+  }
+
+  static async updateProfileLocation(_id, profilePic, location) {
+    return this.collection().updateOne();
   }
 }
