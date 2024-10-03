@@ -1,0 +1,101 @@
+[
+    {
+      "eventName": "Taste upper westside",
+      "description": "Taste Upper Westside is a vibrant food festival celebrating the diverse culinary offerings of the Upper West Side. This event brings together top local chefs, restaurants, and food artisans to showcase their signature dishes, innovative flavors, and unique takes on both classic and modern cuisine. Attendees can indulge in a wide variety of gourmet bites, street food, and sweet treats, while enjoying live music, cooking demonstrations, and interactive workshops. Whether you're a food enthusiast or just looking to explore new flavors, Taste Upper Westside promises a delicious and memorable experience for all.",
+      "tags": ["food", "festival", "2024"],
+      "dateOfEvent": "2024-10-02T11:40:43.309+00:00",
+      "thumbnail": "https://i.pinimg.com/736x/72/46/72/7246722b1b46554c5183a9a4ea36a7be.jpg",
+      "images": [
+        "https://images.unsplash.com/photo-1678646142794-253fdd20fa05?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8Zm9vZCUyMGZlc3RpdmFsfGVufDB8fDB8fHww",
+        "https://images.pexels.com/photos/5779834/pexels-photo-5779834.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.pexels.com/photos/375889/pexels-photo-375889.jpeg?auto=compress&cs=tinysrgb&w=600"
+      ],
+      "userId": "66fd35b700447c714943d6fb",
+      "categoryId": "66fbdf5e4b95d95d693dceaa"
+    },
+    {
+      "eventName": "One day hike",
+      "description": "One Day Hike Food Festival is a unique culinary adventure that combines the thrill of outdoor exploration with the joy of discovering delicious food. Set against the backdrop of a scenic hiking trail, this festival invites food lovers and nature enthusiasts to embark on a one-day hike while stopping at various food stations along the way. Each station features locally sourced dishes, healthy snacks, and refreshing beverages to fuel your journey. The event also offers cooking demonstrations, foraging lessons, and opportunities to connect with fellow foodies. It's the perfect blend of adventure and gastronomy for those who crave both nature and flavor!",
+      "tags": ["hiking", "nature", "health"],
+      "dateOfEvent": "2024-10-02T11:40:43.309+00:00",
+      "thumbnail": "https://d3jmn01ri1fzgl.cloudfront.net/photoadking/webp_thumbnail/catskill-white-and-white-lilac-hiking-flyer-template-v7lq7n4f0fde51.webp",
+      "images": [
+        "https://images.pexels.com/photos/5531415/pexels-photo-5531415.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/917510/pexels-photo-917510.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.pexels.com/photos/1194233/pexels-photo-1194233.jpeg?auto=compress&cs=tinysrgb&w=600"
+      ],
+      "userId": "66fd35b700447c714943d6fb",
+      "categoryId": "66fbdf5e4b95d95d693dceca"
+    },
+    {
+      "eventName": "Parras de la fuente",
+      "description": "Parras de la Fuente is a cultural and gastronomic festival set in the picturesque wine region of Parras, known for its rich history and lush vineyards. This event celebrates the region's renowned wine production, offering attendees the chance to sample a wide variety of local wines while enjoying gourmet food pairings. In addition to wine tastings, the festival features live music, artisanal markets, and tours of the vineyards and historic wineries. Perfect for those looking to unwind, explore new hobbies, and immerse themselves in the tranquil beauty of Parras, this festival provides a relaxing yet enriching experience for wine lovers and adventurers alike.",
+      "tags": ["wine", "hobbies", "chill"],
+      "dateOfEvent": "2024-10-02T11:40:43.309+00:00",
+      "thumbnail": "https://img.freepik.com/free-vector/wine-tasting-vertical-flyer-template_23-2148967948.jpg",
+      "images": [
+        "https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "https://images.pexels.com/photos/9220883/pexels-photo-9220883.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.pexels.com/photos/696214/pexels-photo-696214.jpeg?auto=compress&cs=tinysrgb&w=600"
+      ],
+      "userId": "66fd35b700447c714943d6fb",
+      "categoryId": "66fbdf5e4b95d95d693dceab"
+    },
+    {
+      "eventName": "Mr Bird cloth launching",
+      "description": "Mr. Bird Cloth Launching is an exclusive fashion event showcasing the debut collection of Mr. Bird, a new and exciting brand in the world of clothing. This event offers a first look at the brand's unique and stylish apparel, blending modern design with timeless elegance. Attendees will have the opportunity to explore the collection, which features high-quality fabrics, innovative cuts, and bold prints that reflect a blend of urban sophistication and natural inspiration. The launch includes live fashion presentations, styling workshops, and opportunities to meet the designers behind the brand. It's a must-attend event for fashion enthusiasts looking for fresh and distinctive clothing styles.",
+      "tags": ["fashion", "trend", "2024"],
+      "dateOfEvent": "2024-10-02T11:40:43.309+00:00",
+      "thumbnail": "https://i.pinimg.com/originals/80/55/c4/8055c43d1467361d28d16ae5233fda74.png",
+      "images": [
+        "https://images.pexels.com/photos/12879454/pexels-photo-12879454.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.pexels.com/photos/9594681/pexels-photo-9594681.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.pexels.com/photos/696214/pexels-photo-696214.jpeg?auto=compress&cs=tinysrgb&w=600"
+      ],
+      "userId": "66fd413f00447c714943d6fe",
+      "categoryId": "66fbdf5e4b95d95d693dcec4"
+    },
+    {
+      "eventName": "Sparrow painting event",
+      "description": "Sparrow Painting Event is a creative and relaxing gathering where art enthusiasts of all levels can come together to explore the beauty of painting. Inspired by the grace and charm of sparrows, this event invites participants to capture the essence of nature through guided painting sessions. With expert instructors leading the way, attendees will learn techniques in color blending, brush strokes, and composition, all while creating their own unique artwork. Whether you're an experienced artist or just looking to try something new, the Sparrow Painting Event offers a fun and inspiring environment to express your creativity in a peaceful, nature-themed setting.",
+      "tags": ["art", "classic", "painting"],
+      "dateOfEvent": "2024-10-02T11:40:43.309+00:00",
+      "thumbnail": "https://i.pinimg.com/736x/14/3f/6a/143f6ab1c69cda129e98570fceb0d0b7.jpg",
+      "images": [
+        "https://images.pexels.com/photos/11000924/pexels-photo-11000924.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.pexels.com/photos/11000913/pexels-photo-11000913.jpeg?auto=compress&cs=tinysrgb&w=600",
+        "https://images.pexels.com/photos/18562111/pexels-photo-18562111/free-photo-of-woman-painting-in-a-studio.jpeg?auto=compress&cs=tinysrgb&w=600"
+      ],
+      "userId": "66fd413f00447c714943d6fe",
+      "categoryId": "66fbdf5e4b95d95d693dcea1"
+    },
+    {
+      "eventName": "Tomorrowland festival",
+      "description": "Sparrow Painting Event is a creative and relaxing gathering where art enthusiasts of all levels can come together to explore the beauty of painting. Inspired by the grace and charm of sparrows, this event invites participants to capture the essence of nature through guided painting sessions. With expert instructors leading the way, attendees will learn techniques in color blending, brush strokes, and composition, all while creating their own unique artwork. Whether you're an experienced artist or just looking to try something new, the Sparrow Painting Event offers a fun and inspiring environment to express your creativity in a peaceful, nature-themed setting.",
+      "tags": ["party", "EDM", "music"],
+      "dateOfEvent": "2024-10-02T11:40:43.309+00:00",
+      "thumbnail": "https://cdn.uc.assets.prezly.com/85fb69e8-f3c6-4087-9a47-f2149e3fa437/-/resize/1108x/-/quality/best/-/format/auto/",
+      "images": [
+        "https://images.unsplash.com/photo-1505842465776-3b4953ca4f44?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8dG9tb3Jyb3dsYW5kJTIwZmVzdGl2YWx8ZW58MHx8MHx8fDA%3D",
+        "https://images.unsplash.com/photo-1577045629710-8e0bd30c1a03?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHRvbW9ycm93bGFuZCUyMGZlc3RpdmFsfGVufDB8fDB8fHww",
+        "https://images.unsplash.com/photo-1493676304819-0d7a8d026dcf?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHRvbW9ycm93bGFuZCUyMGZlc3RpdmFsfGVufDB8fDB8fHww"
+      ],
+      "userId": "66fd413f00447c714943d6fe",
+      "categoryId": "66fbdf5e4b95d95d693dce9f"
+    },
+    {
+      "eventName": "Mobile legend tournament",
+      "description": "The Mobile Legends Tournament is an exciting competitive gaming event where skilled players and teams come together to battle it out in the popular multiplayer online battle arena (MOBA) game, Mobile Legends: Bang Bang. Players will engage in strategic 5v5 matches, showcasing their mastery of heroes, teamwork, and tactical decision-making. The tournament offers thrilling action as teams compete for glory, prizes, and the title of champion. Whether you're a seasoned player or an enthusiastic fan, the Mobile Legends Tournament promises an intense and immersive gaming experience filled with fast-paced battles and high-stakes moments.",
+      "tags": ["game", "MOBA", "mobile legend"],
+      "dateOfEvent": "2024-10-02T11:40:43.309+00:00",
+      "thumbnail": "https://i.pinimg.com/originals/34/da/ff/34daffe2d0d863891f820535c9fb5dcf.jpg",
+      "images": [
+        "https://cdn.oneesports.id/cdn-data/sites/2/2023/04/Mobile-Legends_Stage-Playoff-MPL-ID-S11.jpeg",
+        "https://gbk.id/upload/1674029656-MLBB%201.jpg",
+        "https://static.gosugamers.net/b0/75/0e/3152cdd2fac27639f3e2556078f0b9afaccb85cb8a1577bcffa58d3fc4.png"
+      ],
+      "userId": "66fd413f00447c714943d6fe",
+      "categoryId": "66fbdf5e4b95d95d693dcea8"
+    }
+  ]
+  

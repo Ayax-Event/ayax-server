@@ -25,52 +25,105 @@ export default class Event {
     const itemsPerPage = limit ? Number(limit) : 6;
     const currentPage = !page ? 1 : Number(page);
     const skip = (currentPage - 1) * itemsPerPage;
-    let query = {};
 
+    let matchStage = {};
+
+    // Handle search
     if (Object.keys(search).length > 0) {
       Object.keys(search).forEach((key) => {
-        query[key] = { $regex: search[key], $options: "si" };
+        matchStage[key] = { $regex: search[key], $options: "si" };
       });
     }
 
+    // Handle filter
     if (Object.keys(filter).length > 0) {
       Object.keys(filter).forEach((key) => {
         if (key === "categoryId") {
-          query[key] = new ObjectId(filter[key]);
+          matchStage[key] = new ObjectId(filter[key]);
         } else {
-          query[key] = filter[key];
+          matchStage[key] = filter[key];
         }
       });
     }
 
-    const sortObject = {};
+    // Handle sort
+    const sortStage = {};
     if (Object.keys(sort).length > 0) {
       Object.keys(sort).forEach((key) => {
-        sortObject[key] = sort[key].toLowerCase() === "desc" ? -1 : 1;
+        sortStage[key] = sort[key].toLowerCase() === "desc" ? -1 : 1;
       });
     } else {
-      sortObject.createdAt = -1;
+      sortStage.createdAt = -1;
     }
 
-    const totalData = await this.collection().countDocuments(query);
-    const totalPages = Math.ceil(totalData / itemsPerPage);
-
-    const data = await this.collection()
-      .find(query)
-      .sort(sortObject)
-      .skip(skip)
-      .limit(itemsPerPage)
-      .toArray();
-
-    return {
-      data,
-      pagination: {
-        currentPage,
-        totalPages,
-        totalData,
-        hasPrevPage: currentPage > 1,
-        hasNextPage: currentPage < totalPages,
+    const pipeline = [
+      {
+        $match: matchStage
       },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "creator"
+        }
+      },
+      {
+        $unwind: {
+          path: "$creator",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          "creator.password": 0
+        }
+      },
+      {
+        $facet: {
+          metadata: [
+            { $count: "totalData" },
+            {
+              $addFields: {
+                currentPage: currentPage,
+                itemsPerPage: itemsPerPage,
+                totalPages: {
+                  $ceil: {
+                    $divide: ["$totalData", itemsPerPage]
+                  }
+                },
+                hasPrevPage: { $gt: [currentPage, 1] },
+              }
+            },
+            {
+              $addFields: {
+                hasNextPage: {
+                  $lt: ["$currentPage", "$totalPages"]
+                }
+              }
+            }
+          ],
+          data: [
+            { $sort: sortStage },
+            { $skip: skip },
+            { $limit: itemsPerPage }
+          ]
+        }
+      }
+    ];
+
+    const result = await this.collection().aggregate(pipeline).next();
+
+    // Format the response to match the original structure
+    return {
+      data: result.data || [],
+      pagination: result.metadata[0] || {
+        currentPage,
+        totalPages: 0,
+        totalData: 0,
+        hasPrevPage: false,
+        hasNextPage: false,
+      }
     };
   }
 
@@ -135,7 +188,11 @@ export default class Event {
 
     return await this.collection().updateMany(event).next();
   }
-  static async delete(event) {
-    return await this.collection().deleteOne(event).next();
+  static async delete(eventId) {
+    try {
+      return await this.collection().deleteOne({ _id: new ObjectId(eventId) })
+    } catch (error) {
+      console.log(error, "<<<<<<<<<<< error");
+    }
   }
 }
