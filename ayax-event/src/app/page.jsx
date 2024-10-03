@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { poppins, poppinsmedium } from "@/font";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { getCookie } from 'cookies-next';
 
 export default function HomePage() {
   const [data, setData] = useState([]);
@@ -14,7 +15,7 @@ export default function HomePage() {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -29,27 +30,50 @@ export default function HomePage() {
     }
   };
 
-  const fetchData = async ( search = "") => {
+  const fetchDelete = async (_id) => {
+    try {
+      const token = getCookie("Authorization");
+      const res = await fetch(`http://localhost:3000/api/event-delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token
+        },
+        body: JSON.stringify({ _id: _id }), // Stringify the body
+      });
+      const msg = await res.json();
+      console.log(msg);
+      fetchData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (_id) => {
+    fetchDelete(_id)
+  };
+
+  const fetchData = async (search = "") => {
     setLoading(true);
     try {
       let url = `http://localhost:3000/api/event`;
       const params = new URLSearchParams();
-console.log("Fetching data...");
+      console.log("Fetching data...");
       if (search) {
-        params.append('search_eventName', search);
+        params.append("search_eventName", search);
       } else {
-        params.append('page', page);
+        params.append("page", page);
       }
 
       url += `?${params.toString()}`;
 
-      const response = await fetch(url);
+      const response = await fetch(url, {cache: "no-store"});
       const result = await response.json();
 
       if (page === 1 || search !== searchTerm) {
         setData(result.data);
       } else {
-        setData(prevData => [...prevData, ...result.data]);
+        setData((prevData) => [...prevData, ...result.data]);
       }
       setPagination(result.pagination);
     } catch (error) {
@@ -62,7 +86,6 @@ console.log("Fetching data...");
   useEffect(() => {
     fetchData();
   }, [page]);
-  console.log(page, "!!!!!!!!!!!!!!!");
 
   return (
     <div className="flex-1 p-6 overflow-auto">
@@ -107,10 +130,7 @@ console.log("Fetching data...");
           next={() => setPage(page + 1)}
           hasMore={pagination.hasNextPage && !searchTerm}
           loader={<h4></h4>}
-          endMessage={
-            <p style={{ textAlign: "center" }}>
-            </p>
-          }
+          endMessage={<p style={{ textAlign: "center" }}></p>}
         >
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             {/* Table header */}
@@ -163,9 +183,7 @@ console.log("Fetching data...");
                 </tr>
               ) : (
                 data.map((event) => (
-                  <tr
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  >
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th
                       scope="row"
                       className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
@@ -209,10 +227,10 @@ console.log("Fetching data...");
 
                     <td className="px-6 py-4">
                       <a
-                        href="#"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        onClick={() => handleDelete(event._id)}
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
                       >
-                        Edit user
+                        Delete
                       </a>
                     </td>
                   </tr>

@@ -4,10 +4,10 @@ import User from "../../../../db/models/User";
 
 export async function DELETE(request) {
     try {
-        console.log("MASUKKKKKKKKKK");
+        console.log("dilit");
 
         const body = await request.json()
-
+console.log(body);
         const userId = request.headers.get("x-user-id");
         console.log("user id: ", userId);
 

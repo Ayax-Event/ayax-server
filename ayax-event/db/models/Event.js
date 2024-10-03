@@ -187,12 +187,8 @@ export default class Event {
     return await this.collection().updateMany(event).next();
   }
   static async delete(eventId) {
-    console.log(eventId, "eventId models");
-
-    try {
+    console.log("eventId models: ", eventId);
       return await this.collection().deleteOne({ _id: new ObjectId(String(eventId)) }).next()
-    } catch (error) {
-      console.log(error, "<<<<<<<<<<< error");
-    }
+  
   }
 }
