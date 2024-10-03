@@ -5,7 +5,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
-export default function SignupFormDemo() {
+export default function Login() {
   const [user, setUser] = useState({ email: "", password: "" });
   const router = useRouter();
 

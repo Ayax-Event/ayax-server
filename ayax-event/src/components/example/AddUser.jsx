@@ -5,7 +5,7 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
-export default function RegisterUser() {
+export default function AddUser() {
   const [user, setUser] = useState({ name: "", username: "", email: "", password: "" });
   const router = useRouter();
 

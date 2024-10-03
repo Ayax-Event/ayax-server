@@ -12,7 +12,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-export default function SidebarWithTable() {
+export default function SidebarCMS() {
     const handleLogout = () => {
         document.cookie =
           "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";

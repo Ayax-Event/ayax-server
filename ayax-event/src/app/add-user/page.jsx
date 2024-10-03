@@ -1,5 +1,9 @@
-import RegisterUser from "@/components/example/AddUser";
+import AddUser from "@/components/example/AddUser";
 
-export default function AddUser() {
-  return <RegisterUser/>
+export default function AddUserPage() {
+  return (
+    <div>
+      <AddUser />
+    </div>
+  );
 }
