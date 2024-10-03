@@ -114,7 +114,6 @@ export default class Event {
 
     const result = await this.collection().aggregate(pipeline).next();
 
-    // Format the response to match the original structure
     return {
       data: result.data || [],
       pagination: result.metadata[0] || {
@@ -126,7 +125,6 @@ export default class Event {
       }
     };
   }
-
   static async findById(_id) {
     const pipeline = [
       {
@@ -189,8 +187,10 @@ export default class Event {
     return await this.collection().updateMany(event).next();
   }
   static async delete(eventId) {
+    console.log(eventId, "eventId models");
+
     try {
-      return await this.collection().deleteOne({ _id: new ObjectId(eventId) })
+      return await this.collection().deleteOne({ _id: new ObjectId(String(eventId)) }).next()
     } catch (error) {
       console.log(error, "<<<<<<<<<<< error");
     }

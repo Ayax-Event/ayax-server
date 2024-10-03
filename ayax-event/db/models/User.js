@@ -33,6 +33,7 @@ export default class User {
   }
 
   static async findByEmail(email) {
+    
     return await this.collection().findOne({ email });
   }
 

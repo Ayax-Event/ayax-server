@@ -12,7 +12,6 @@ export async function middleware(request) {
     request.nextUrl.pathname.startsWith("/api/user-events") ||
     request.nextUrl.pathname.startsWith("/api/current-user") ||
     request.nextUrl.pathname.startsWith("/api/event-delete")
-
   ) {
     if (!authorization) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
