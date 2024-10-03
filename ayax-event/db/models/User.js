@@ -3,7 +3,9 @@ import { z } from "zod";
 import { hashPassword } from "@/helpers/bcrypt";
 import { ObjectId } from "mongodb";
 
-const UserSchema = z.object({
+export const PasswordSchema = z.string().min(8)
+
+export const UserSchema = z.object({
   name: z.string().min(3),
   username: z.string().min(3),
   email: z.string().email().min(10),
@@ -33,7 +35,7 @@ export default class User {
   }
 
   static async findByEmail(email) {
-    
+
     return await this.collection().findOne({ email });
   }
 
@@ -47,7 +49,7 @@ export default class User {
         .aggregate([
           {
             $match: {
-              _id: new ObjectId(_id),
+              _id: new ObjectId(String(_id)),
             },
           },
           {
@@ -67,5 +69,35 @@ export default class User {
 
   static async updateProfileLocation(_id, profilePic, location) {
     return this.collection().updateOne();
+  }
+  static async update(userId, newPassword) {
+    try {
+      console.log("MASUK BOOSSSSSQUEEE");
+
+      console.log(userId, "<<<<<<<<<<< userId model");
+      console.log(newPassword, "<<<<<<<<<<<< model pass");
+
+      // Use `$set` operator to update the password
+      return await this.collection().updateOne(
+        { _id: new ObjectId(String(userId)) }, // Assuming the userId is the _id in MongoDB
+        {
+          $set: { password: newPassword }     // Correct way to set the password
+        }
+      );
+    } catch (error) {
+      console.log(error, "<<<<<<<<<<<<<<<<<<< error at change pass");
+    }
+  }
+
+  static async findUserById(userId) {
+    try {
+      return this.collection().findOne({
+        _id: new ObjectId(String(userId))
+      })
+    } catch (error) {
+      console.log(error);
+
+    }
+
   }
 }

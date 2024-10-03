@@ -11,7 +11,8 @@ export async function middleware(request) {
   if (
     request.nextUrl.pathname.startsWith("/api/user-events") ||
     request.nextUrl.pathname.startsWith("/api/current-user") ||
-    request.nextUrl.pathname.startsWith("/api/event-delete")
+    request.nextUrl.pathname.startsWith("/api/event-delete") ||
+    request.nextUrl.pathname.startsWith("/api/change-password")
   ) {
     if (!authorization) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
@@ -46,5 +47,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/api/user-events/:path*", "/api/current-user/:path*", "/api/event-delete/:path*"],
+  matcher: ["/api/user-events/:path*", "/api/current-user/:path*", "/api/event-delete/:path*", "/api/change-password/:path*"],
 };
