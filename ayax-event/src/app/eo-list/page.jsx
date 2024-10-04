@@ -1,10 +1,9 @@
 "use client";
+import React, { useState, useEffect } from "react";
 import { poppins, poppinsmedium } from "@/font";
-import { useState, useEffect } from "react";
-// import { useRouter } from "next/navigation";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-export default function EoListPage(searchTerm) {
+export default function EoListPage() {
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({
     currentPage: 0,
@@ -13,42 +12,70 @@ export default function EoListPage(searchTerm) {
     hasNextPage: false,
     hasPrevPage: false,
   });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
-  // const router = useRouter();
-  const fetchData = async (page = 1) => {
-    try {
-      let url = `http://localhost:3000/api/event?page=${page}&search=${searchTerm}`;
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setPage(1);
+    fetchData(1, searchTerm.trim());
+  };
 
-      const response = await fetch(url);
-      const result = await response.json();
-
-      if (page === 1) {
-        setData(result.data);
-      } else {
-        setData([...data, ...result.data]);
-      }
-      setPagination(result.pagination);
-    } catch (error) {
-      console.log(error);
+  const handleInputChange = (e) => {
+    const newTerm = e.target.value;
+    setSearchTerm(newTerm);
+    if (newTerm === "") {
+      setPage(1);
+      fetchData(1, "");
     }
   };
 
-  
+  const fetchData = async (pageNum = 1, search = searchTerm) => {
+    setLoading(true);
+    try {
+      let url = `http://localhost:3000/api/event`; 
+      const params = new URLSearchParams();
+      
+      params.append("page", pageNum);
+      if (search) {
+        params.append("search", search);
+      }
+
+      url += `?${params.toString()}`;
+
+      const response = await fetch(url, { cache: "no-store" });
+      const result = await response.json();
+
+      if (pageNum === 1) {
+        setData(result.data);
+      } else {
+        setData((prevData) => [...prevData, ...result.data]);
+      }
+      setPagination(result.pagination);
+      setPage(pageNum);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchData(1);
-  }, [searchTerm]);
-  
+    fetchData();
+  }, []);
+
+  const loadMore = () => {
+    if (pagination.hasNextPage) {
+      fetchData(page + 1);
+    }
+  };
 
   return (
     <div className="flex-1 p-6 overflow-auto">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <div className="flex items-center justify-between flex-wrap md:flex-row bg-white dark:bg-gray-900 pb-4 pl-4 pr-4">
-          <div className={`font-bold ${poppins.className}`}>Organizer List</div>
-          <div className="flex-1 p-10">
-            <label htmlFor="table-search" className="sr-only">
-              Search
-            </label>
-          </div>
+        <div className="flex items-center justify-between flex-wrap md:flex-row bg-white dark:bg-gray-900 pb-4 pl-4 pr-4 pt-4">
+          <div className={`font-bold ${poppins.className}`}>Event Organizer List</div>
           <div className="relative">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
@@ -67,111 +94,100 @@ export default function EoListPage(searchTerm) {
                 />
               </svg>
             </div>
-            <input
-              type="text"
-              id="table-search-users"
-              className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search for event organizers"
-            />
+            <form onChange={handleSearch}>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={handleInputChange}
+                className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search for event organizers"
+              />
+              <button type="submit" className="hidden">
+                Search
+              </button>
+            </form>
           </div>
         </div>
-        {data.length === 0 ? (
-          <p className="text-center">No event found.</p>
-        ) : (
+        <div id="infinite-table">
           <InfiniteScroll
             dataLength={data.length}
-            next={() => fetchData(pagination.currentPage + 1)}
+            next={loadMore}
             hasMore={pagination.hasNextPage}
             loader={<h4>Loading...</h4>}
-            endMessage={
-              <p style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all</b>
-              </p>
-            }
+            endMessage={<p style={{ textAlign: "center" }}>No more event organizers to load.</p>}
+            height={500}
           >
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className}  px-6 py-3`}
-                  >
+                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
                     Name
                   </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className}  px-6 py-3`}
-                  >
+                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
                     Username
                   </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className}  px-6 py-3`}
-                  >
+                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
                     Email
                   </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className}  px-6 py-3`}
-                  >
-                    location
+                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
+                    Location
                   </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className}  px-6 py-3`}
-                  >
+                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
                     Action
                   </th>
                 </tr>
               </thead>
-
               <tbody>
-                {data.map((event) => (
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th
-                      scope="row"
-                      className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      <img
-                        className="w-10 h-10 rounded-full"
-                        src={event.creator.profilepict}
-                        alt="Neil Sims"
-                      />
-                      <div className="ps-3">
-                        <div className="text-base font-semibold">{event.creator.name}</div>
-                        <div className="font-normal text-gray-500">
-                          neil.sims@flowbite.com
-                        </div>
-                      </div>
-                    </th>
-                    <td className="px-6 py-4">{event.creator.username}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                        {event.creator.email}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                        {event.creator.location}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <a
-                        href="#"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                      >
-                        Belom ada
-                      </a>
+                {data.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-4">
+                      No event organizers found.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  data.map((event) => (
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                        <img
+                          className="w-10 h-10 rounded-full"
+                          src={event.creator.profilepict}
+                        />
+                        <div className="ps-3">
+                          <div className="text-base font-semibold">{event.creator.name}</div>
+                          <div className="font-normal text-gray-500">
+                            {event.creator.email}
+                          </div>
+                        </div>
+                      </th>
+                      <td className="px-6 py-4">{event.creator.username}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />
+                          {event.creator.email}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />
+                          {event.creator.location}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <a
+                          href="#"
+                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        >
+                          Edit
+                        </a>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </InfiniteScroll>
-        )}
+          {loading && <div className="text-center py-4">Loading...</div>}
+        </div>
       </div>
     </div>
   );

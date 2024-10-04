@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { poppins, poppinsmedium } from "@/font";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { getCookie } from 'cookies-next';
+import { getCookie } from "cookies-next";
 
 export default function HomePage() {
   const [data, setData] = useState([]);
@@ -19,6 +19,7 @@ export default function HomePage() {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    setPage(1);
     fetchData(1, searchTerm.trim());
   };
 
@@ -26,6 +27,7 @@ export default function HomePage() {
     const newTerm = e.target.value;
     setSearchTerm(newTerm);
     if (newTerm === "") {
+      setPage(1);
       fetchData(1, "");
     }
   };
@@ -37,45 +39,46 @@ export default function HomePage() {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token
+          Authorization: token,
         },
-        body: JSON.stringify({ _id: _id }), // Stringify the body
+        body: JSON.stringify({ _id: _id }),
       });
       const msg = await res.json();
       console.log(msg);
-      fetchData();
+      fetchData(1, searchTerm);
     } catch (error) {
       console.log(error);
     }
   };
 
   const handleDelete = async (_id) => {
-    fetchDelete(_id)
+    fetchDelete(_id);
   };
 
-  const fetchData = async (search = "") => {
+  const fetchData = async (pageNum = page, search = searchTerm) => {
     setLoading(true);
     try {
       let url = `http://localhost:3000/api/event`;
       const params = new URLSearchParams();
       console.log("Fetching data...");
+      
+      params.append("page", pageNum);
       if (search) {
         params.append("search_eventName", search);
-      } else {
-        params.append("page", page);
       }
 
       url += `?${params.toString()}`;
 
-      const response = await fetch(url, {cache: "no-store"});
+      const response = await fetch(url, { cache: "no-store" });
       const result = await response.json();
 
-      if (page === 1 || search !== searchTerm) {
+      if (pageNum === 1) {
         setData(result.data);
       } else {
         setData((prevData) => [...prevData, ...result.data]);
       }
       setPagination(result.pagination);
+      setPage(pageNum);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -85,7 +88,13 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchData();
-  }, [page]);
+  }, []);
+
+  const loadMore = () => {
+    if (pagination.hasNextPage) {
+      fetchData(page + 1);
+    }
+  };
 
   return (
     <div className="flex-1 p-6 overflow-auto">
@@ -124,122 +133,124 @@ export default function HomePage() {
             </form>
           </div>
         </div>
-        <button onClick={() => setPage(page + 1)}>meee</button>
-        <InfiniteScroll
-          dataLength={data.length}
-          next={() => setPage(page + 1)}
-          hasMore={pagination.hasNextPage && !searchTerm}
-          loader={<h4></h4>}
-          endMessage={<p style={{ textAlign: "center" }}></p>}
-        >
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            {/* Table header */}
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th
-                  scope="col"
-                  className={`${poppinsmedium.className} px-6 py-3`}
-                >
-                  Event Name
-                </th>
-                <th
-                  scope="col"
-                  className={`${poppinsmedium.className} px-6 py-3`}
-                >
-                  Organizer
-                </th>
-                <th
-                  scope="col"
-                  className={`${poppinsmedium.className} px-6 py-3`}
-                >
-                  Date of Event
-                </th>
-                <th
-                  scope="col"
-                  className={`${poppinsmedium.className} px-6 py-3`}
-                >
-                  Created at
-                </th>
-                <th
-                  scope="col"
-                  className={`${poppinsmedium.className} px-6 py-3`}
-                >
-                  Updated at
-                </th>
-                <th
-                  scope="col"
-                  className={`${poppinsmedium.className} px-6 py-3`}
-                >
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.length === 0 ? (
+        <div id="infinite-table">
+          <InfiniteScroll
+            dataLength={data.length}
+            next={loadMore}
+            hasMore={pagination.hasNextPage}
+            loader={<h4>Loading...</h4>}
+            endMessage={<p style={{ textAlign: "center" }}>No more events to load.</p>}
+            height={500}
+          >
+            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+              {/* Table header */}
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <td colSpan="6" className="text-center py-4">
-                    No events found.
-                  </td>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
+                    Event Name
+                  </th>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
+                    Organizer
+                  </th>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
+                    Date of Event
+                  </th>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
+                    Created at
+                  </th>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
+                    Updated at
+                  </th>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
+                    Action
+                  </th>
                 </tr>
-              ) : (
-                data.map((event) => (
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th
-                      scope="row"
-                      className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      <img
-                        className="w-10 h-10 rounded-full"
-                        src={event.images[0]}
-                        alt="Neil Sims"
-                      />
-                      <div className="ps-3">
-                        <div className="text-base font-semibold">
-                          {event.eventName}
-                        </div>
-                        <div className="font-normal text-gray-500">
-                          neil.sims@flowbite.com
-                        </div>
-                      </div>
-                    </th>
-
-                    <td className="px-6 py-4">{event.creator?.username}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                        {event.dateOfEvent}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                        {event.createdAt}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <div className="flex items-center">
-                        <div className="h-2.5 w-2.5 rounded-full bg-red-500 me-2" />{" "}
-                        {event.updatedAt}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <a
-                        onClick={() => handleDelete(event._id)}
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
-                      >
-                        Delete
-                      </a>
+              </thead>
+              <tbody>
+                {data.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="text-center py-4">
+                      No events found.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </InfiniteScroll>
-        {loading && <div className="text-center py-4">Loading...</div>}
+                ) : (
+                  data.map((event) => (
+                    <tr key={event._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <th
+                        scope="row"
+                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        <img
+                          className="w-10 h-10 rounded-full"
+                          src={event.images[0]}
+                          alt={event.eventName}
+                        />
+                        <div className="ps-3">
+                          <div className="text-base font-semibold">
+                            {event.eventName}
+                          </div>
+                          <div className="font-normal text-gray-500">
+                            {event.creator?.email}
+                          </div>
+                        </div>
+                      </th>
+
+                      <td className="px-6 py-4">{event.creator?.username}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
+                          {new Date(event.dateOfEvent).toDateString()}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
+                          {new Date(event.creator.createdAt).toDateString()}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <div className="flex items-center">
+                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
+                          {new Date(event.creator.updatedAt).toDateString()}
+                        </div>
+                      </td>
+
+                      <td className="px-6 py-4">
+                        <a
+                          onClick={() => handleDelete(event._id)}
+                          className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
+                        >
+                          Delete
+                        </a>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </InfiniteScroll>
+          {loading && <div className="text-center py-4">Loading...</div>}
+        </div>
       </div>
     </div>
   );

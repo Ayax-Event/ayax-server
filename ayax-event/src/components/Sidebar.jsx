@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
 import {
   IconArrowLeft,
@@ -10,13 +10,28 @@ import {
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 
 export default function SidebarCMS() {
-    const handleLogout = () => {
-        document.cookie =
-          "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      };
+  const [data, setData] = useState([])
+  const fetchUser = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/current-user`);
+      const result = await response.json();
+
+      setData(result)
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  const handleLogout = () => {
+    document.cookie = "Authorization=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  };
+
   const links = [
     {
       label: "Home",
@@ -40,11 +55,15 @@ export default function SidebarCMS() {
       ),
     },
     {
-      label: "Logout",
-      href: "",
+      label: (
+        <button onClick={handleLogout} className="flex items-center text-neutral-700 dark:text-neutral-200">
+       
+          <span>Logout</span> 
+        </button>
+      ),
+      href: "#", 
       icon: (
-        <IconArrowLeft onClick={handleLogout} className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-        
+        <IconArrowLeft onClick={handleLogout} className="h-5 w-5 flex-shrink-0" />
       ),
     },
   ];
@@ -65,11 +84,11 @@ export default function SidebarCMS() {
           <div>
             <SidebarLink
               link={{
-                label: "Manu Arora",
+                label: data.name,
                 href: "#",
                 icon: (
-                  <Image
-                    src="https://assets.aceternity.com/manu.png"
+                  <img
+                    src={data.profilepict}
                     className="h-7 w-7 flex-shrink-0 rounded-full"
                     width={50}
                     height={50}
