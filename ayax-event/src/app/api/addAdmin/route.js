@@ -8,6 +8,10 @@ export async function POST(response) {
         if (!userId) {
             return Response.json({ message: "Unathorized" }, { status: 401 })
         }
+        const findAdmin = await User.findUserById(userId)
+        if (!findAdmin.role === "admin") {
+            return Response.json({ message: "Unathorized" }, { status: 401 })
+        }
         const { name, username, email, password } = await response.json();
         const profilepict =
             "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
