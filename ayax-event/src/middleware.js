@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 
 export async function middleware(request) {
   const authorization = cookies().get("Authorization")?.value;
-  console.log(authorization, "<<<<<<<<<<<< auth middleware");
   // if (!authCookie) {
   //   throw new Error("invalid token")
   // }
