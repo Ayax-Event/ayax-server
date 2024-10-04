@@ -2,6 +2,7 @@ import database from "../confiq/mongodb";
 import { z } from "zod";
 import { hashPassword } from "@/helpers/bcrypt";
 import { ObjectId } from "mongodb";
+import { useId } from "react";
 
 export const PasswordSchema = z.string().min(8)
 
@@ -91,6 +92,8 @@ export default class User {
 
   static async findUserById(userId) {
     try {
+      console.log(useId,"userId model");
+      
       return this.collection().findOne({
         _id: new ObjectId(String(userId))
       })

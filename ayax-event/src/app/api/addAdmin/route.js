@@ -1,18 +1,22 @@
 import { z } from "zod";
 import User from "../../../../db/models/User";
 
-export async function POST(response) {
+export async function POST(request) {
     try {
-        console.log(response, "response register model");
+        // console.log(response, "response register model");
         const userId = request.headers.get("x-user-id");
+        console.log(userId,"userId api addAdmin");
         if (!userId) {
             return Response.json({ message: "Unathorized" }, { status: 401 })
         }
+        
         const findAdmin = await User.findUserById(userId)
-        if (!findAdmin.role === "admin") {
+        console.log(findAdmin,"aaaadmin");
+        
+        if (findAdmin.role !== "admin") {
             return Response.json({ message: "Unathorized" }, { status: 401 })
         }
-        const { name, username, email, password } = await response.json();
+        const { name, username, email, password } = await request.json();
         const profilepict =
             "https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg";
         const res = await User.create({

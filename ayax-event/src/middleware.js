@@ -39,7 +39,8 @@ export async function middleware(request) {
     request.nextUrl.pathname.startsWith("/api/user-events") ||
     request.nextUrl.pathname.startsWith("/api/current-user") ||
     request.nextUrl.pathname.startsWith("/api/event-delete") ||
-    request.nextUrl.pathname.startsWith("/api/change-password")
+    request.nextUrl.pathname.startsWith("/api/change-password") ||
+    request.nextUrl.pathname.startsWith("/api/addAdmin")
   ) {
     if (!authorization) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
@@ -79,8 +80,10 @@ export const config = {
     "/api/current-user/:path*",
     "/api/event-delete/:path*",
     "/api/change-password/:path*",
+    "/api/addAdmin/:path*",
     "/",
     "/eo-list",
     "/add-user",
+
   ],
 };
