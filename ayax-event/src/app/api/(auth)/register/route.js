@@ -1,5 +1,5 @@
 import { z } from "zod";
-import User from "../../../../db/models/User";
+import User from "../../../../../db/models/User";
 
 export async function POST(response) {
   try {

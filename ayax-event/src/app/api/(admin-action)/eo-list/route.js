@@ -1,4 +1,4 @@
-import User from "../../../../db/models/User";
+import User from "../../../../../db/models/User";
 
 export const GET = async (request) => {
   try {

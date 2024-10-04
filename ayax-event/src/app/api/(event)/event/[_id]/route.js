@@ -1,4 +1,4 @@
-import Event from "../../../../../db/models/Event";
+import Event from "../../../../../../db/models/Event";
 
 export async function GET(request, { params }) {
   try {

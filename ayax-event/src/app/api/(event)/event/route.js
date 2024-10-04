@@ -1,4 +1,4 @@
-import Event from "../../../../db/models/Event";
+import Event from "../../../../../db/models/Event";
 
 export async function GET(request) {
   try {
@@ -32,4 +32,3 @@ export async function GET(request) {
     return Response.json({ message }, { status });
   }
 }
-

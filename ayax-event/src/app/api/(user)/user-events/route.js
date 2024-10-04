@@ -1,6 +1,5 @@
-import { ObjectId } from "mongodb";
-import Event from "../../../../db/models/Event";
-import User from "../../../../db/models/User";
+import Event from "../../../../../db/models/Event";
+import User from "../../../../../db/models/User";
 
 export async function GET(request) {
   const userId = request.headers.get("x-user-id");
