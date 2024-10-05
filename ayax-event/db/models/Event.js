@@ -7,9 +7,9 @@ const EventSchema = z.object({
   userId: z.instanceof(ObjectId),
   categoryId: z.instanceof(ObjectId),
   description: z.string(),
-  tags: z.string().optional(),
+  tags: z.array(z.string()).optional(),
   thumbnail: z.string(),
-  images: z.string(),
+  images: z.array(z.string()),
   location: z.string(),
   dateOfEvent: z.string(),
   isFree: z.boolean().default(false),
@@ -58,26 +58,26 @@ export default class Event {
 
     const pipeline = [
       {
-        $match: matchStage
+        $match: matchStage,
       },
       {
         $lookup: {
           from: "users",
           localField: "userId",
           foreignField: "_id",
-          as: "creator"
-        }
+          as: "creator",
+        },
       },
       {
         $unwind: {
           path: "$creator",
-          preserveNullAndEmptyArrays: true
-        }
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $project: {
-          "creator.password": 0
-        }
+          "creator.password": 0,
+        },
       },
       {
         $facet: {
@@ -89,27 +89,27 @@ export default class Event {
                 itemsPerPage: itemsPerPage,
                 totalPages: {
                   $ceil: {
-                    $divide: ["$totalData", itemsPerPage]
-                  }
+                    $divide: ["$totalData", itemsPerPage],
+                  },
                 },
                 hasPrevPage: { $gt: [currentPage, 1] },
-              }
+              },
             },
             {
               $addFields: {
                 hasNextPage: {
-                  $lt: ["$currentPage", "$totalPages"]
-                }
-              }
-            }
+                  $lt: ["$currentPage", "$totalPages"],
+                },
+              },
+            },
           ],
           data: [
             { $sort: sortStage },
             { $skip: skip },
-            { $limit: itemsPerPage }
-          ]
-        }
-      }
+            { $limit: itemsPerPage },
+          ],
+        },
+      },
     ];
 
     const result = await this.collection().aggregate(pipeline).next();
@@ -122,7 +122,7 @@ export default class Event {
         totalData: 0,
         hasPrevPage: false,
         hasNextPage: false,
-      }
+      },
     };
   }
   static async findById(_id) {
@@ -173,7 +173,7 @@ export default class Event {
       thumbnail: body.thumbnail,
       images: body.images,
       dateOfEvent: body.dateOfEvent,
-      isFree: true,
+      isActive: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -188,7 +188,8 @@ export default class Event {
   }
   static async delete(eventId) {
     console.log("eventId models: ", eventId);
-      return await this.collection().deleteOne({ _id: new ObjectId(String(eventId)) }).next()
-  
+    return await this.collection()
+      .deleteOne({ _id: new ObjectId(String(eventId)) })
+      .next();
   }
 }

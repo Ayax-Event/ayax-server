@@ -85,7 +85,27 @@ export default class User {
     });
   }
 
-  static async getAllEo() {
-    return this.collection().find({ role: "eo" }).toArray();
+  static async getAllEo(page = 1, itemsPerPage = 10) {
+    const skip = (page - 1) * itemsPerPage;
+    const totalData = await this.collection().countDocuments({ role: "eo" });
+
+    const data = await this.collection()
+      .find({ role: "eo" })
+      .skip(skip)
+      .limit(itemsPerPage)
+      .toArray();
+
+    const totalPages = Math.ceil(totalData / itemsPerPage);
+
+    const pagination = {
+      totalData,
+      currentPage: page,
+      itemsPerPage,
+      totalPages,
+      hasPrevPage: page > 1,
+      hasNextPage: page < totalPages,
+    };
+
+    return { data, pagination };
   }
 }
