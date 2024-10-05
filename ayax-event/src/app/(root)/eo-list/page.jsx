@@ -34,9 +34,9 @@ export default function EoListPage() {
   const fetchData = async (pageNum = 1, search = searchTerm) => {
     setLoading(true);
     try {
-      let url = `http://localhost:3000/api/event`; 
+      let url = `http://localhost:3000/api/eo-list`;
       const params = new URLSearchParams();
-      
+
       params.append("page", pageNum);
       if (search) {
         params.append("search", search);
@@ -61,6 +61,8 @@ export default function EoListPage() {
     }
   };
 
+  console.log(data);
+  
   useEffect(() => {
     fetchData();
   }, []);
@@ -75,7 +77,9 @@ export default function EoListPage() {
     <div className="flex-1 p-6 overflow-auto">
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div className="flex items-center justify-between flex-wrap md:flex-row bg-white dark:bg-gray-900 pb-4 pl-4 pr-4 pt-4">
-          <div className={`font-bold ${poppins.className}`}>Event Organizer List</div>
+          <div className={`font-bold ${poppins.className}`}>
+            Event Organizer List
+          </div>
           <div className="relative">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
@@ -114,25 +118,44 @@ export default function EoListPage() {
             next={loadMore}
             hasMore={pagination.hasNextPage}
             loader={<h4>Loading...</h4>}
-            endMessage={<p style={{ textAlign: "center" }}>No more event organizers to load.</p>}
+            endMessage={
+              <p style={{ textAlign: "center" }}>
+                No more event organizers to load.
+              </p>
+            }
             height={500}
           >
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
                     Name
                   </th>
-                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
                     Username
                   </th>
-                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
                     Email
                   </th>
-                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
                     Location
                   </th>
-                  <th scope="col" className={`${poppinsmedium.className} px-6 py-3`}>
+                  <th
+                    scope="col"
+                    className={`${poppinsmedium.className} px-6 py-3`}
+                  >
                     Action
                   </th>
                 </tr>
@@ -145,31 +168,36 @@ export default function EoListPage() {
                     </td>
                   </tr>
                 ) : (
-                  data.map((event) => (
+                  data.map((eo) => (
                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                      <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                      <th
+                        scope="row"
+                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                      >
                         <img
                           className="w-10 h-10 rounded-full"
-                          src={event.creator.profilepict}
+                          src={eo.profilepict}
                         />
                         <div className="ps-3">
-                          <div className="text-base font-semibold">{event.creator.name}</div>
+                          <div className="text-base font-semibold">
+                            {eo.name}
+                          </div>
                           <div className="font-normal text-gray-500">
-                            {event.creator.email}
+                            {eo.email}
                           </div>
                         </div>
                       </th>
-                      <td className="px-6 py-4">{event.creator.username}</td>
+                      <td className="px-6 py-4">{eo.username}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />
-                          {event.creator.email}
+                          {eo.email}
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />
-                          {event.creator.location}
+                          {eo.location}
                         </div>
                       </td>
                       <td className="px-6 py-4">

@@ -6,12 +6,17 @@ import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 
 export default function AddUser() {
-  const [user, setUser] = useState({ name: "", username: "", email: "", password: "" });
+  const [user, setUser] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+  });
   const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser(prevUser => ({
+    setUser((prevUser) => ({
       ...prevUser,
       [name]: value,
     }));
@@ -20,7 +25,7 @@ export default function AddUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3001/api/register`, {
+      const response = await fetch(`http://localhost:3000/api/addAdmin`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
@@ -37,36 +42,68 @@ export default function AddUser() {
     }
   };
 
+  console.log(user);
+
   return (
     <div className="max-w-md w-full mx-auto">
       <div className="bg-white dark:bg-black shadow-md rounded-lg p-8">
         <h2 className="font-bold text-xl text-neutral-800 text-center dark:text-neutral-200 mb-8">
-          Register New User
+          Register New Admin
         </h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="Name">Name</Label>
-            <Input id="name" name="name" placeholder="Input your name here" type="name" onChange={handleChange} value={user.name} />
+            <Input
+              id="name"
+              name="name"
+              placeholder="Input your name here"
+              type="name"
+              onChange={handleChange}
+              value={user.name}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Username</Label>
-            <Input id="username" name="username" placeholder="Input your username here" type="username" onChange={handleChange} value={user.username} />
+            <Input
+              id="username"
+              name="username"
+              placeholder="Input your username here"
+              type="username"
+              onChange={handleChange}
+              value={user.username}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" name="email" placeholder="Input your email here" type="email" onChange={handleChange} value={user.email} />
+            <Input
+              id="email"
+              name="email"
+              placeholder="Input your email here"
+              type="email"
+              onChange={handleChange}
+              value={user.email}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" placeholder="••••••••" type="password" onChange={handleChange} value={user.password} />
+            <Input
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              type="password"
+              onChange={handleChange}
+              value={user.password}
+            />
           </LabelInputContainer>
 
           <button
-          className="w-full bg-gradient-to-br text-white rounded-md h-10 font-medium"
-          type="submit"
-          style={{ background: 'linear-gradient(to bottom right, #37B7C3, #088395)' }}
-        >
-          Log in &rarr;
+            className="w-full bg-gradient-to-br text-white rounded-md h-10 font-medium"
+            type="submit"
+            style={{
+              background: "linear-gradient(to bottom right, #37B7C3, #088395)",
+            }}
+          >
+            Register &rarr;
             <BottomGradient />
           </button>
         </form>
