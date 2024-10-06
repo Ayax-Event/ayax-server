@@ -1,11 +1,23 @@
 import { z } from "zod";
 import User from "../../../../../db/models/User";
-import { comparePassword } from "@/helpers/bcrypt";
-import { signToken } from "@/helpers/jwt";
+import jwt from "jsonwebtoken";
+import * as jose from "jose";
+import bcryptjs from "bcryptjs";
+
+export const comparePassword = (password, hashedPassword) => {
+  return bcryptjs.compareSync(password, hashedPassword);
+};
+const secretKey = process.env.JWT_SECRET;
+console.log(secretKey, "<<<<<<<<<<<<<<<<<<secret key");
+
+export const signToken = (payload) => {
+  return jwt.sign(payload, secretKey);
+};
 import { cookies } from "next/headers";
 
 export async function POST(response) {
   try {
+    console.log("masusk");
     const { email, password } = await response.json();
     console.log(email, password, "<<<<<<<<<<<<<<<<<<<<<<<<<pass");
 
@@ -31,7 +43,7 @@ export async function POST(response) {
 
     return Response.json({ accessToken });
   } catch (error) {
-    // console.log(error, "<<<<< error");
+    console.log(error, "<<<<< error");
 
     let message = error.message || "Internal server error";
     let status = error.status || 500;

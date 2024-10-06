@@ -162,23 +162,34 @@ export default class Event {
       .toArray();
   }
 
-  static async create(body, userId) {
+  static async create(
+    userId,
+    eventName,
+    categoryId,
+    description,
+    dateOfEvent,
+    longtitude,
+    latitude,
+    tags,
+    thumbnailUrl,
+    imageUrls
+  ) {
     const newEvent = {
-      eventName: body.eventName,
+      eventName: eventName,
       userId: new ObjectId(userId),
-      categoryId: new ObjectId(body.categoryId),
-      description: body.description,
-      location: body.location,
-      tags: body.tags,
-      thumbnail: body.thumbnail,
-      images: body.images,
-      dateOfEvent: body.dateOfEvent,
+      categoryId: new ObjectId(categoryId),
+      description: description,
+      location: { longtitude, latitude }, // TODO: use a library to handle geolocation
+      tags: tags,
+      thumbnail: thumbnailUrl,
+      images: imageUrls,
+      dateOfEvent: dateOfEvent,
       isActive: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    EventSchema.parse(newEvent);
 
+    console.log("new event being created: ", newEvent);
     return await this.collection().insertOne(newEvent);
   }
   static async update(event) {

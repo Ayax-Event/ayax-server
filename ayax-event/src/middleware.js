@@ -14,7 +14,7 @@ export async function middleware(request) {
     request.nextUrl.pathname.startsWith("/add-user")
   ) {
     if (!authorization) {
-      return NextResponse.redirect(new URL("/login", request.url))
+      return NextResponse.redirect(new URL("/login", request.url));
     }
     const [type, token] = authorization.split(" ");
     if (type !== "Bearer" || !token) {
@@ -40,7 +40,8 @@ export async function middleware(request) {
     request.nextUrl.pathname.startsWith("/api/current-user") ||
     request.nextUrl.pathname.startsWith("/api/event-delete") ||
     request.nextUrl.pathname.startsWith("/api/change-password") ||
-    request.nextUrl.pathname.startsWith("/api/addAdmin")
+    request.nextUrl.pathname.startsWith("/api/addAdmin") ||
+    request.nextUrl.pathname.startsWith("/api/add-event")
   ) {
     if (!authorization) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
@@ -81,9 +82,9 @@ export const config = {
     "/api/event-delete/:path*",
     "/api/change-password/:path*",
     "/api/addAdmin/:path*",
+    "/api/add-event/:path*",
     "/",
     "/eo-list",
     "/add-user",
-
   ],
 };

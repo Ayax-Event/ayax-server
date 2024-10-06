@@ -1,8 +1,14 @@
 import database from "../confiq/mongodb";
 import { z } from "zod";
-import { hashPassword } from "@/helpers/bcrypt";
 import { ObjectId } from "mongodb";
-import { useId } from "react";
+
+import bcryptjs from "bcryptjs";
+
+export const hashPassword = (password) => {
+  const salt = bcryptjs.genSaltSync(10);
+  return bcryptjs.hashSync(password, salt);
+};
+
 
 export const PasswordSchema = z.string().min(8);
 

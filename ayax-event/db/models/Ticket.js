@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import database from "../confiq/mongodb";
 
 export default class Ticket {
@@ -5,13 +6,16 @@ export default class Ticket {
     return database.collection("tickets");
   }
 
-  static async createTicket(eventId, ticket) {
+  static async createTicket(eventId, userId, ticket) {
     const newTicket = {
       eventId: eventId,
+      eoId: new ObjectId(userId),
       type: ticket.type,
       price: ticket.price,
       stock: ticket.stock,
     };
+    console.log("new ticket: ", newTicket);
+    console.log(newTicket);
 
     return this.collection().insertOne(newTicket);
   }
