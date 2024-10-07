@@ -76,6 +76,14 @@ export default class User {
   static async updateProfileLocation(_id, profilePic, location) {
     return this.collection().updateOne();
   }
+  static async updateRole(userId, role) {
+    return this.collection().updateOne(
+      { _id: new ObjectId(String(userId)) },
+      {
+        $set: { role },
+      }
+    );
+  }
   static async update(userId, newPassword) {
     return await this.collection().updateOne(
       { _id: new ObjectId(String(userId)) },
