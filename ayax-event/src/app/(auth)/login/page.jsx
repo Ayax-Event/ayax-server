@@ -1,4 +1,4 @@
-import Login from "@/components/example/signup-form-demo";
+import Login from "../../../components/example/signup-form-demo";
 
 export default function loginPage() {
   return (

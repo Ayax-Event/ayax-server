@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { poppins, poppinsmedium } from "@/font";
+import { poppins, poppinsmedium } from "../../font";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getCookie } from "cookies-next";
 
@@ -61,7 +61,7 @@ export default function HomePage() {
       let url = `http://localhost:3000/api/event`;
       const params = new URLSearchParams();
       console.log("Fetching data...");
-      
+
       params.append("page", pageNum);
       if (search) {
         params.append("search_eventName", search);
@@ -139,7 +139,9 @@ export default function HomePage() {
             next={loadMore}
             hasMore={pagination.hasNextPage}
             loader={<h4>Loading...</h4>}
-            endMessage={<p style={{ textAlign: "center" }}>No more events to load.</p>}
+            endMessage={
+              <p style={{ textAlign: "center" }}>No more events to load.</p>
+            }
             height={500}
           >
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -193,7 +195,10 @@ export default function HomePage() {
                   </tr>
                 ) : (
                   data.map((event) => (
-                    <tr key={event._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <tr
+                      key={event._id}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    >
                       <th
                         scope="row"
                         className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"

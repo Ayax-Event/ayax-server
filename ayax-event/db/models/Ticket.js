@@ -23,4 +23,8 @@ export default class Ticket {
   static async getAllTicket() {
     return this.collection().find().toArray();
   }
+
+  static async findByTicketId(_id) {
+    return await this.collection().findOne({ _id: new ObjectId(_id) });
+  }
 }

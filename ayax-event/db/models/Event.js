@@ -150,7 +150,17 @@ export default class Event {
           path: "$creator",
         },
       },
+      // Add this $lookup to fetch tickets associated with the event
+      {
+        $lookup: {
+          from: "tickets", // The name of the tickets collection
+          localField: "_id", // The local field to match (event's _id)
+          foreignField: "eventId", // The foreign field in the tickets collection (eventId)
+          as: "tickets", // The resulting tickets array
+        },
+      },
     ];
+
     return await this.collection().aggregate(pipeline).next();
   }
 

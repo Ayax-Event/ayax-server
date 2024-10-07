@@ -1,5 +1,5 @@
 import User, { PasswordSchema } from "../../../../../db/models/User";
-import { comparePassword, hashPassword } from "@/helpers/bcrypt";
+import { comparePassword, hashPassword } from "../../../../helpers/bcrypt";
 
 export const POST = async (request) => {
   try {

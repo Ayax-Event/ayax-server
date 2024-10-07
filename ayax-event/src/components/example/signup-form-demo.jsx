@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 export default function Login() {
   const [user, setUser] = useState({ email: "", password: "" });
@@ -11,7 +11,7 @@ export default function Login() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser(prevUser => ({
+    setUser((prevUser) => ({
       ...prevUser,
       [name]: value,
     }));
@@ -42,24 +42,44 @@ export default function Login() {
       <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
         <h2 className="font-bold text-xl text-neutral-800 text-center dark:text-neutral-200">
           <div className="flex justify-center mb-4">
-            <img src="https://ik.imagekit.io/axellgadiel/image.png?updatedAt=1727850866110" alt="Signup Image" className="w-32 h-32 object-cover rounded-full" />
+            <img
+              src="https://ik.imagekit.io/axellgadiel/image.png?updatedAt=1727850866110"
+              alt="Signup Image"
+              className="w-32 h-32 object-cover rounded-full"
+            />
           </div>
           Welcome to Ayax System
         </h2>
         <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" name="email" placeholder="Input your email here" type="email" onChange={handleChange} value={user.email} />
+            <Input
+              id="email"
+              name="email"
+              placeholder="Input your email here"
+              type="email"
+              onChange={handleChange}
+              value={user.email}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" name="password" placeholder="••••••••" type="password" onChange={handleChange} value={user.password} />
+            <Input
+              id="password"
+              name="password"
+              placeholder="••••••••"
+              type="password"
+              onChange={handleChange}
+              value={user.password}
+            />
           </LabelInputContainer>
 
           <button
-            className="bg-gradient-to-br relative group/btn w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"            
+            className="bg-gradient-to-br relative group/btn w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
-            style={{ background: 'linear-gradient(to bottom right, #37B7C3, #088395)' }}
+            style={{
+              background: "linear-gradient(to bottom right, #37B7C3, #088395)",
+            }}
           >
             Log in &rarr;
             <BottomGradient />

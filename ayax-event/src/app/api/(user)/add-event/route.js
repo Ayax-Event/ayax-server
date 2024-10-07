@@ -13,8 +13,8 @@ export async function POST(request) {
   try {
     console.log("PROCESS....");
     const userId = request.headers.get("x-user-id");
-    console.log(userId);
     const formData = await request.formData();
+    console.log(formData);
     // return new Response("OK", { status: 200 });
 
     const eventName = formData.get("eventName");

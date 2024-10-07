@@ -1,7 +1,7 @@
 import { z } from "zod";
 import User from "../../../../../db/models/User";
-import { comparePassword } from "@/helpers/bcrypt";
-import { signToken } from "@/helpers/jwt";
+import { comparePassword } from "../../../../helpers/bcrypt";
+import { signToken } from "../../../../helpers/jwt";
 import { cookies } from "next/headers";
 
 export async function POST(response) {
