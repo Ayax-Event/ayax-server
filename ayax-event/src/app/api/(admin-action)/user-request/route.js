@@ -28,6 +28,9 @@ export async function GET(request) {
             return Response.json({ message: "Unauthorized" }, { status: 401 })
         }
         const userRequest = await Requestuser.getAllReq()
+        // if (userRequest.status) {
+            
+        // }
 
         return NextResponse.json({ message: "Request sent successfully", userRequest }, { status: 200 })
     } catch (error) {

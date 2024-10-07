@@ -35,8 +35,10 @@ export default class Requestuser {
     }
     static async getAllReq() {
         return await this.collection().aggregate([
-
             {
+                $match:{
+                    status: "declined"
+            },
                 $lookup: {
                     from: 'users',
                     localField: 'userId',
