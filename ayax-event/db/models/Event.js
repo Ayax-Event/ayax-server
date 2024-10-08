@@ -21,6 +21,7 @@ export default class Event {
   static collection() {
     return database.collection("events");
   }
+
   static async findAll(page, search, limit, sort, filter) {
     const itemsPerPage = limit ? Number(limit) : 6;
     const currentPage = !page ? 1 : Number(page);
@@ -125,6 +126,7 @@ export default class Event {
       },
     };
   }
+
   static async findById(_id) {
     const pipeline = [
       {
@@ -150,13 +152,88 @@ export default class Event {
           path: "$creator",
         },
       },
-      // Add this $lookup to fetch tickets associated with the event
       {
         $lookup: {
-          from: "tickets", // The name of the tickets collection
-          localField: "_id", // The local field to match (event's _id)
-          foreignField: "eventId", // The foreign field in the tickets collection (eventId)
-          as: "tickets", // The resulting tickets array
+          from: "tickets",
+          localField: "_id",
+          foreignField: "eventId",
+          as: "tickets",
+        },
+      },
+      {
+        $lookup: {
+          from: "orders",
+          let: { eventId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$eventId", "$$eventId"] },
+                    { $eq: ["$status", "paid"] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "attendees",
+        },
+      },
+    ];
+
+    return await this.collection().aggregate(pipeline).next();
+  }
+
+  static async findWithAttendees(_id) {
+    const pipeline = [
+      {
+        $match: {
+          _id: new ObjectId(String(_id)),
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "creator",
+        },
+      },
+      {
+        $project: {
+          "creator.password": 0,
+        },
+      },
+      {
+        $unwind: {
+          path: "$creator",
+        },
+      },
+      {
+        $lookup: {
+          from: "tickets",
+          localField: "_id",
+          foreignField: "eventId",
+          as: "tickets",
+        },
+      },
+      {
+        $lookup: {
+          from: "orders",
+          let: { eventId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$eventId", "$$eventId"] },
+                    { $eq: ["$status", "paid"] },
+                  ],
+                },
+              },
+            },
+          ],
+          as: "attendees",
         },
       },
     ];
@@ -189,7 +266,7 @@ export default class Event {
       userId: new ObjectId(userId),
       categoryId: new ObjectId(categoryId),
       description: description,
-      location: { longtitude, latitude }, 
+      location: { longtitude, latitude },
       tags: tags,
       thumbnail: thumbnailUrl,
       images: imageUrls,
