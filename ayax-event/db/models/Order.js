@@ -79,18 +79,20 @@ export default class Order {
   }
 
   static async findByUserId(userId, filter = {}, sort = {}) {
+    console.log("Filter:", filter);
     const matchStage = {
       $match: {
         userId: new ObjectId(String(userId)),
       },
     };
 
-    // Add additional filter conditions
-    Object.entries(filter).forEach(([key, value]) => {
-      if (!["status", "eventType"].includes(key)) {
-        matchStage.$match[key] = value;
-      }
-    });
+    // Handle multiple statuses using $or
+    if (filter.status && Array.isArray(filter.status)) {
+      matchStage.$match.$or = filter.status.map((status) => ({ status }));
+    } else if (filter.status) {
+      // If it's a single value (not an array), handle it as a single condition
+      matchStage.$match.status = filter.status;
+    }
 
     const pipeline = [
       matchStage,
@@ -103,44 +105,49 @@ export default class Order {
         },
       },
       { $unwind: "$user" },
+      {
+        $lookup: {
+          from: "events",
+          localField: "eventId",
+          foreignField: "_id",
+          as: "event",
+        },
+      },
+      { $unwind: "$event" },
+      {
+        $project: {
+          "user.password": 0,
+          "user.createdAt": 0,
+          "user.updatedAt": 0,
+          "user.location": 0,
+          "event.description": 0,
+          "event.images": 0,
+          "event.tags": 0,
+        },
+      },
     ];
 
-    // Add conditional stages for paid events (upcoming or historical)
-    if (filter.status === "paid") {
-      pipeline.push(
-        {
-          $lookup: {
-            from: "events",
-            localField: "eventId",
-            foreignField: "_id",
-            as: "event",
-          },
+    if (filter.eventType === "upcoming") {
+      pipeline.push({
+        $match: {
+          "event.dateOfEvent": { $gt: new Date() },
         },
-        { $unwind: "$event" }
-      );
+      });
 
-      if (filter.eventType === "upcoming") {
-        pipeline.push({
-          $match: {
-            "event.dateOfEvent": { $gt: new Date() },
-          },
-        });
-      } else if (filter.eventType === "historical") {
-        pipeline.push({
-          $match: {
-            "event.dateOfEvent": { $lte: new Date() },
-          },
-        });
-      }
-    } else if (filter.status) {
-      // If status filter is present but not "paid", add it to the match stage
-      matchStage.$match.status = filter.status;
+      console.log("Checking for upcoming events after:", new Date());
+    } else if (filter.eventType === "historical") {
+      pipeline.push({
+        $match: {
+          "event.dateOfEvent": { $lte: new Date() },
+        },
+      });
     }
 
-    // Add sort stage if sort parameter is provided
     if (Object.keys(sort).length > 0) {
       pipeline.push({ $sort: sort });
     }
+
+    console.log("Pipeline:", JSON.stringify(pipeline, null, 2));
 
     return await this.collection().aggregate(pipeline).toArray();
   }

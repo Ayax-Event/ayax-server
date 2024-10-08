@@ -84,7 +84,7 @@ export default function ExpandableEventList() {
   const fetchData = async (pageNum = page, search = searchTerm) => {
     setLoading(true);
     try {
-      let url = `http://localhost:3000/api/event`;
+      let url = `/api/event`;
       const params = new URLSearchParams();
       params.append("page", pageNum);
       if (search) {

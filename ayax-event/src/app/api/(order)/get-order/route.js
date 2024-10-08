@@ -10,7 +10,13 @@ export async function GET(request) {
     request.nextUrl.searchParams.forEach((value, key) => {
       if (key.startsWith("filter_")) {
         const filterKey = key.replace("filter_", "");
-        filter[filterKey] = value;
+
+        // Split the filter value if it's a comma-separated string
+        if (filterKey === "status") {
+          filter[filterKey] = value.split(","); // Split the string into an array
+        } else {
+          filter[filterKey] = value; // Other filters can remain as is
+        }
       } else if (key.startsWith("sort_")) {
         const sortKey = key.replace("sort_", "");
         sort[sortKey] = value === "asc" ? 1 : -1;
