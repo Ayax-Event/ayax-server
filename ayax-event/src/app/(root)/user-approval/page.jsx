@@ -22,24 +22,6 @@ export default function UpgradeRolePage() {
     }
   };
 
-  const handleApproveUser = async (_id, ) => {
-    try {
-      const token = getCookie("Authorization");
-      const res = await fetch(`http://localhost:3000/api/approve-request`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ _id: _id }),
-      });
-      await res.json();
-      fetchUserPending();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleUserAction = async (requestId, isApprove) => {
     console.log(requestId, isApprove);
     try {
@@ -50,7 +32,7 @@ export default function UpgradeRolePage() {
           "Content-Type": "application/json",
           Authorization: token,
         },
-        body: JSON.stringify({ requestId, isApprove}),
+        body: JSON.stringify({ requestId, isApprove }),
       });
       await res.json();
       fetchUserPending();
@@ -161,8 +143,11 @@ export default function UpgradeRolePage() {
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan="5" className={`${poppinsmedium.className} text-center py-4`}>
-                No users have registered as event organizers yet.
+                <td
+                  colSpan="5"
+                  className={`${poppinsmedium.className} text-center py-4`}
+                >
+                  No users have registered as event organizers yet.
                 </td>
               </tr>
             ) : (
@@ -208,7 +193,6 @@ export default function UpgradeRolePage() {
                       Decline
                     </a>
                   </td>
-                  
                 </tr>
               ))
             )}

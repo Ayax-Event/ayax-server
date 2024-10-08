@@ -33,27 +33,30 @@ export default function HomePage() {
     }
   };
 
-  const fetchDelete = async (_id) => {
+  const handleUpdateStatus = async (eventId, isActive) => {
     try {
-      const token = getCookie("Authorization");
-      const res = await fetch(`http://localhost:3000/api/event-delete`, {
-        method: "DELETE",
+      console.log(eventId, isActive);
+      const response = await fetch(`http://localhost:3000/api/event-edit`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: token,
         },
-        body: JSON.stringify({ _id: _id }),
+        body: JSON.stringify({ eventId, isActive }),
       });
-      const msg = await res.json();
-      console.log(msg);
-      fetchData(1, searchTerm);
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const result = await response.json();
+      fetchData();
+      console.log("Status updated successfully:", result);
     } catch (error) {
-      console.log(error);
+      console.error("Error updating status:", error);
     }
   };
 
-  const handleDelete = async (_id) => {
-    fetchDelete(_id);
+  const handleUpdate = async (eventId, isActive) => {
+    handleUpdateStatus(eventId, isActive);
   };
 
   const fetchData = async (pageNum = page, search = searchTerm) => {
@@ -181,7 +184,12 @@ export default function HomePage() {
               hasMore={pagination.hasNextPage}
               loader={<h4>Loading more...</h4>}
               endMessage={
-                <p className={`${poppinsmedium.className}`} style={{ textAlign: "center" }}>No more Events to load</p>
+                <p
+                  className={`${poppinsmedium.className}`}
+                  style={{ textAlign: "center" }}
+                >
+                  No more Events to load
+                </p>
               }
               height={500}
             >
@@ -216,7 +224,7 @@ export default function HomePage() {
                       scope="col"
                       className={`${poppinsmedium.className} px-6 py-3`}
                     >
-                      Updated at
+                      Status
                     </th>
                     <th
                       scope="col"
@@ -276,7 +284,14 @@ export default function HomePage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center">
-                            {new Date(event.creator.updatedAt).toDateString()}
+                            <div
+                              className={`h-2.5 w-2.5 rounded-full ${
+                                event.isActive === "active"
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
+                              } me-2`}
+                            />
+                            {event.isActive}
                           </div>
                         </td>
                         <td className="px-6 py-4">
@@ -289,12 +304,31 @@ export default function HomePage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <a
-                            onClick={() => handleDelete(event._id)}
-                            className={`${poppinsmedium.className} font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer`}
+                          <button
+                            onClick={() =>
+                              handleUpdate(
+                                event._id,
+                                event.isActive === "active"
+                                  ? "inactive"
+                                  : "active"
+                              )
+                            }
+                            className={`${
+                              poppinsmedium.className
+                            } font-medium ${
+                              event.isActive === "active"
+                                ? "text-red-500"
+                                : "text-blue-600"
+                            } dark:${
+                              event.isActive === "active"
+                                ? "text-red-500"
+                                : "text-blue-500"
+                            } hover:underline cursor-pointer`}
                           >
-                            Delete
-                          </a>
+                            {event.isActive === "active"
+                              ? "Deactivate"
+                              : "Activate"}
+                          </button>
                         </td>
                       </tr>
                     ))
