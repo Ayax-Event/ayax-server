@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Event from "../../../../../db/models/Event";
-import cloudinary from "../../../../lib/cloudinary";
+import cloudinary from "@/lib/cloudinary";
 import Ticket from "../../../../../db/models/Ticket";
 
 export const config = {

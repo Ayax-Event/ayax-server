@@ -15,6 +15,7 @@ export default class Order {
     ticketQuantity,
     ticketType,
     ticketId,
+    eventId,
     price
   ) {
     const order = {
@@ -31,8 +32,22 @@ export default class Order {
         type: ticketType,
       },
       price,
+      eventId,
       status: "pending",
     };
     return await this.collection().insertOne(order);
+  }
+
+  static async updateStatus(orderId, status) {
+    return this.collection().updateOne(
+      { _id: new ObjectId(orderId) },
+      {
+        $set: { status },
+      }
+    );
+  }
+
+  static async findOrderById(_id) {
+    return await this.collection().findOne({ _id: new ObjectId(_id) });
   }
 }

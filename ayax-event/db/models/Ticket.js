@@ -12,7 +12,7 @@ export default class Ticket {
       eoId: new ObjectId(userId),
       type: ticket.type,
       price: ticket.price,
-      stock: ticket.stock,
+      stock: +ticket.stock,
     };
     console.log("new ticket: ", newTicket);
     console.log(newTicket);
@@ -26,5 +26,14 @@ export default class Ticket {
 
   static async findByTicketId(_id) {
     return await this.collection().findOne({ _id: new ObjectId(_id) });
+  }
+
+  static async updateTicketStock(_id, stock) {
+    return await this.collection().updateOne(
+      { _id: new ObjectId(_id) },
+      {
+        $set: { stock },
+      }
+    );
   }
 }
