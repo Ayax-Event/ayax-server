@@ -4,8 +4,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { poppins, poppinsmedium } from "../../font";
+import Swal from "sweetalert2";
+
+// or via CommonJS
 
 export default function ExpandableEventList() {
+  const Swal = require("sweetalert2");
   const [active, setActive] = useState(null);
   const id = useId();
   const ref = useRef(null);
@@ -152,6 +156,18 @@ export default function ExpandableEventList() {
     }, ${parseFloat(longitude).toFixed(4)}°${longitude >= 0 ? "E" : "W"}`;
   };
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+
   return (
     <>
       {/* ANIMASI DI DALAM CARD */}
@@ -215,7 +231,10 @@ export default function ExpandableEventList() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={() =>
-                      alert("Buy tickets from Ayax Server Mobile Apps")
+                      Toast.fire({
+                        icon: "info",
+                        title: "Buy tickets from Ayax Mobile App",
+                      })
                     }
                     className={`px-4 py-3 text-sm rounded-full font-bold ${
                       active.isActive === "active"
@@ -321,7 +340,7 @@ export default function ExpandableEventList() {
                       layoutId={`card-${event._id}-${id}`}
                       key={event._id}
                       onClick={() => setActive(event)}
-                      className="p-4 flex flex-col bg-[#EBF4F6] hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer shadow-md"
+                      className="p-4 flex flex-col bg-white hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer shadow-md"
                     >
                       <div className="flex gap-4 flex-col w-full">
                         <motion.div layoutId={`image-${event._id}-${id}`}>
