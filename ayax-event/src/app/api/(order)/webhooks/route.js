@@ -16,7 +16,7 @@ export async function POST(request) {
     }
     if (body.transaction_status && body.transaction_status !== "pending") {
       const findOrder = await Order.findOrderById(body.order_id);
-
+      console.log(findOrder, "<<<<<<<<<<< find order");
       if (!findOrder) {
         return NextResponse.json({
           message: "Order not found",
@@ -36,6 +36,8 @@ export async function POST(request) {
         message: "Update order to " + body.transaction_status,
       });
     }
+
+    return NextResponse.json({ message: "Webhook processed" });
   } catch (error) {
     console.error("Error processing webhook:", error);
     return NextResponse.json(

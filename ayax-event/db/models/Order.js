@@ -32,7 +32,7 @@ export default class Order {
         type: ticketType,
       },
       price,
-      eventId,
+      eventId: new ObjectId(eventId),
       status: "pending",
     };
     return await this.collection().insertOne(order);
@@ -46,8 +46,36 @@ export default class Order {
       }
     );
   }
-  static async findOrderById(_id) {
-    return await this.collection().findOne({ _id: new ObjectId(_id) });
+  static async findOrderById(orderId) {
+    return await this.collection()
+      .aggregate([
+        {
+          $match: { _id: new ObjectId(orderId) },
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $lookup: {
+            from: "events",
+            localField: "eventId",
+            foreignField: "_id",
+            as: "event",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $unwind: "$event",
+        },
+      ])
+      .next();
   }
 
   static async findByUserId(userId, filter = {}, sort = {}) {
@@ -115,5 +143,12 @@ export default class Order {
     }
 
     return await this.collection().aggregate(pipeline).toArray();
+  }
+
+  static async checkInOrder(orderId) {
+    return this.collection().updateOne(
+      { _id: new ObjectId(orderId) },
+      { $set: { checkedIn: new Date() } }
+    );
   }
 }
