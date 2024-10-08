@@ -49,33 +49,71 @@ export default class Order {
   static async findOrderById(_id) {
     return await this.collection().findOne({ _id: new ObjectId(_id) });
   }
-  static async findByUserId(userId) {
-    const pipeline = [
-      {
-        $match:
 
-        {
-          userId:new ObjectId(String(userId))
-        }
+  static async findByUserId(userId, filter = {}, sort = {}) {
+    const matchStage = {
+      $match: {
+        userId: new ObjectId(String(userId)),
       },
-      {
-        $lookup:
+    };
 
-        {
+    // Add additional filter conditions
+    Object.entries(filter).forEach(([key, value]) => {
+      if (!["status", "eventType"].includes(key)) {
+        matchStage.$match[key] = value;
+      }
+    });
+
+    const pipeline = [
+      matchStage,
+      {
+        $lookup: {
           from: "users",
           localField: "userId",
           foreignField: "_id",
-          as: "userDetail"
-        }
+          as: "user",
+        },
       },
-      {
-        $project:
+      { $unwind: "$user" },
+    ];
 
+    // Add conditional stages for paid events (upcoming or historical)
+    if (filter.status === "paid") {
+      pipeline.push(
         {
-          password: 0
-        }
+          $lookup: {
+            from: "events",
+            localField: "eventId",
+            foreignField: "_id",
+            as: "event",
+          },
+        },
+        { $unwind: "$event" }
+      );
+
+      if (filter.eventType === "upcoming") {
+        pipeline.push({
+          $match: {
+            "event.dateOfEvent": { $gt: new Date() },
+          },
+        });
+      } else if (filter.eventType === "historical") {
+        pipeline.push({
+          $match: {
+            "event.dateOfEvent": { $lte: new Date() },
+          },
+        });
       }
-    ]
+    } else if (filter.status) {
+      // If status filter is present but not "paid", add it to the match stage
+      matchStage.$match.status = filter.status;
+    }
+
+    // Add sort stage if sort parameter is provided
+    if (Object.keys(sort).length > 0) {
+      pipeline.push({ $sort: sort });
+    }
+
     return await this.collection().aggregate(pipeline).toArray();
   }
 }

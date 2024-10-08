@@ -5,6 +5,7 @@ import Midtrans from "midtrans-client";
 export async function POST(request) {
   try {
     const userId = request.headers.get("x-user-id");
+    console.log(userId, "<<<<<<<<<<<<<<< user id");
     const snap = new Midtrans.Snap({
       isProduction: false,
       serverKey: process.env.MIDTRANS_SERVER_KEY,
