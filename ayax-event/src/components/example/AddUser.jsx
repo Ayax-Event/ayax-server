@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
+import { poppinsmedium, poppins } from "../../font.js"
 
 export default function AddUser() {
   const [user, setUser] = useState({
@@ -45,14 +46,14 @@ export default function AddUser() {
   console.log(user);
 
   return (
-    <div className="max-w-md w-full mx-auto">
+    <div className="max-w-md w-full mx-auto pt-16">
       <div className="bg-white dark:bg-black shadow-md rounded-lg p-8">
-        <h2 className="font-bold text-xl text-neutral-800 text-center dark:text-neutral-200 mb-8">
+        <h2 className={`${poppins.className} font-bold text-xl text-neutral-800 text-center dark:text-neutral-200 mb-8`}>
           Register New Admin
         </h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="Name">Name</Label>
+            <Label className={`${poppinsmedium.className}`} htmlFor="Name">Name</Label>
             <Input
               id="name"
               name="name"
@@ -60,10 +61,11 @@ export default function AddUser() {
               type="name"
               onChange={handleChange}
               value={user.name}
+              className={`${poppinsmedium.className}`}
             />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Username</Label>
+            <Label className={`${poppinsmedium.className}`} htmlFor="email">Username</Label>
             <Input
               id="username"
               name="username"
@@ -71,10 +73,11 @@ export default function AddUser() {
               type="username"
               onChange={handleChange}
               value={user.username}
+              className={`${poppinsmedium.className}`}
             />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Email Address</Label>
+            <Label className={`${poppinsmedium.className}`} htmlFor="email">Email Address</Label>
             <Input
               id="email"
               name="email"
@@ -82,10 +85,11 @@ export default function AddUser() {
               type="email"
               onChange={handleChange}
               value={user.email}
+              className={`${poppinsmedium.className}`}
             />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="password">Password</Label>
+            <Label className={`${poppinsmedium.className}`} htmlFor="password">Password</Label>
             <Input
               id="password"
               name="password"
@@ -93,6 +97,7 @@ export default function AddUser() {
               type="password"
               onChange={handleChange}
               value={user.password}
+              className={`${poppinsmedium.className}`}
             />
           </LabelInputContainer>
 

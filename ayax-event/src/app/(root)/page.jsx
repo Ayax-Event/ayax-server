@@ -14,8 +14,9 @@ export default function HomePage() {
     hasPrevPage: false,
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [locations, setLocations] = useState({});
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -86,9 +87,46 @@ export default function HomePage() {
     }
   };
 
+  const formatCoordinates = (longitude, latitude) => {
+    if (!longitude || !latitude) return "Location not available";
+    return `${parseFloat(latitude).toFixed(4)}°${
+      latitude >= 0 ? "N" : "S"
+    }, ${parseFloat(longitude).toFixed(4)}°${longitude >= 0 ? "E" : "W"}`;
+  };
+
+  const getLocationName = async (longitude, latitude) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+      );
+      const data = await response.json();
+      return data.display_name || formatCoordinates(longitude, latitude);
+    } catch (error) {
+      console.error("Error fetching location name:", error);
+      return formatCoordinates(longitude, latitude);
+    }
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const newLocations = {};
+      for (const event of data) {
+        if (event.location && !locations[event._id]) {
+          newLocations[event._id] = await getLocationName(
+            event.location.longtitude,
+            event.location.latitude
+          );
+        }
+      }
+      setLocations((prev) => ({ ...prev, ...newLocations }));
+    };
+
+    fetchLocations();
+  }, [data]);
 
   const loadMore = () => {
     if (pagination.hasNextPage) {
@@ -124,7 +162,7 @@ export default function HomePage() {
                 type="text"
                 value={searchTerm}
                 onChange={handleInputChange}
-                className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className={`${poppinsmedium.className} block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                 placeholder="Search for events"
               />
               <button type="submit" className="hidden">
@@ -134,127 +172,140 @@ export default function HomePage() {
           </div>
         </div>
         <div id="infinite-table">
-          <InfiniteScroll
-            dataLength={data.length}
-            next={loadMore}
-            hasMore={pagination.hasNextPage}
-            loader={<h4>Loading...</h4>}
-            endMessage={
-              <p style={{ textAlign: "center" }}>No more events to load.</p>
-            }
-            height={500}
-          >
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              {/* Table header */}
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className} px-6 py-3`}
-                  >
-                    Event Name
-                  </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className} px-6 py-3`}
-                  >
-                    Organizer
-                  </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className} px-6 py-3`}
-                  >
-                    Date of Event
-                  </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className} px-6 py-3`}
-                  >
-                    Created at
-                  </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className} px-6 py-3`}
-                  >
-                    Updated at
-                  </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className} px-6 py-3`}
-                  >
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.length === 0 ? (
+          {loading && data.length === 0 ? (
+            <div className="text-center py-4">Loading...</div>
+          ) : (
+            <InfiniteScroll
+              dataLength={data.length}
+              next={loadMore}
+              hasMore={pagination.hasNextPage}
+              loader={<h4>Loading more...</h4>}
+              endMessage={
+                <p className={`${poppinsmedium.className}`} style={{ textAlign: "center" }}>No more Events to load</p>
+              }
+              height={500}
+            >
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                   <tr>
-                    <td colSpan="6" className="text-center py-4">
-                      No events found.
-                    </td>
-                  </tr>
-                ) : (
-                  data.map((event) => (
-                    <tr
-                      key={event._id}
-                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    <th
+                      scope="col"
+                      className={`${poppinsmedium.className} px-6 py-3`}
                     >
-                      <th
-                        scope="row"
-                        className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        <img
-                          className="w-10 h-10 rounded-full"
-                          src={event.images[0]}
-                          alt={event.eventName}
-                        />
-                        <div className="ps-3">
-                          <div className="text-base font-semibold">
-                            {event.eventName}
-                          </div>
-                          <div className="font-normal text-gray-500">
-                            {event.creator?.email}
-                          </div>
-                        </div>
-                      </th>
-
-                      <td className="px-6 py-4">{event.creator?.username}</td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                          {new Date(event.dateOfEvent).toDateString()}
-                        </div>
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                          {new Date(event.creator.createdAt).toDateString()}
-                        </div>
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{" "}
-                          {new Date(event.creator.updatedAt).toDateString()}
-                        </div>
-                      </td>
-
-                      <td className="px-6 py-4">
-                        <a
-                          onClick={() => handleDelete(event._id)}
-                          className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer"
-                        >
-                          Delete
-                        </a>
+                      Event Name
+                    </th>
+                    <th
+                      scope="col"
+                      className={`${poppinsmedium.className} px-6 py-3`}
+                    >
+                      Organizer
+                    </th>
+                    <th
+                      scope="col"
+                      className={`${poppinsmedium.className} px-6 py-3`}
+                    >
+                      Date of Event
+                    </th>
+                    <th
+                      scope="col"
+                      className={`${poppinsmedium.className} px-6 py-3`}
+                    >
+                      Created at
+                    </th>
+                    <th
+                      scope="col"
+                      className={`${poppinsmedium.className} px-6 py-3`}
+                    >
+                      Updated at
+                    </th>
+                    <th
+                      scope="col"
+                      className={`${poppinsmedium.className} px-6 py-3`}
+                    >
+                      Location
+                    </th>
+                    <th
+                      scope="col"
+                      className={`${poppinsmedium.className} px-6 py-3`}
+                    >
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.length === 0 ? (
+                    <tr>
+                      <td colSpan="7" className="text-center py-4">
+                        No events found.
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </InfiniteScroll>
-          {loading && <div className="text-center py-4">Loading...</div>}
+                  ) : (
+                    data.map((event) => (
+                      <tr
+                        key={event._id}
+                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                      >
+                        <th
+                          scope="row"
+                          className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          <img
+                            className={`${poppinsmedium.className} w-10 h-10 rounded-full`}
+                            src={event.images[0]}
+                            alt={event.eventName}
+                          />
+                          <div className="ps-3">
+                            <div className="text-base font-semibold">
+                              {event.eventName}
+                            </div>
+                            <div className="font-normal text-gray-500">
+                              {event.creator?.email}
+                            </div>
+                          </div>
+                        </th>
+                        <td className="px-6 py-4">{event.creator?.username}</td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            {new Date(event.dateOfEvent).toDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            {new Date(event.creator.createdAt).toDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            {new Date(event.creator.updatedAt).toDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            {locations[event._id] ||
+                              formatCoordinates(
+                                event.location?.longtitude,
+                                event.location?.latitude
+                              )}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <a
+                            onClick={() => handleDelete(event._id)}
+                            className={`${poppinsmedium.className} font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer`}
+                          >
+                            Delete
+                          </a>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </InfiniteScroll>
+          )}
+          {loading && data.length > 0 && (
+            <div className="text-center py-4">Loading more...</div>
+          )}
         </div>
       </div>
     </div>

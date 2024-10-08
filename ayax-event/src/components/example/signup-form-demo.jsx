@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "../../lib/utils";
+import poppins from "../../font"
 
 export default function Login() {
   const [user, setUser] = useState({ email: "", password: "" });
@@ -45,7 +46,7 @@ export default function Login() {
             <img
               src="https://ik.imagekit.io/axellgadiel/image.png?updatedAt=1727850866110"
               alt="Signup Image"
-              className="w-32 h-32 object-cover rounded-full"
+              className={`${poppins.className} w-32 h-32 object-cover rounded-full`}
             />
           </div>
           Welcome to Ayax System
