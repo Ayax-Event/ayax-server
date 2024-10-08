@@ -46,8 +46,36 @@ export default class Order {
       }
     );
   }
-
   static async findOrderById(_id) {
     return await this.collection().findOne({ _id: new ObjectId(_id) });
+  }
+  static async findByUserId(userId) {
+    const pipeline = [
+      {
+        $match:
+
+        {
+          userId:new ObjectId(String(userId))
+        }
+      },
+      {
+        $lookup:
+
+        {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetail"
+        }
+      },
+      {
+        $project:
+
+        {
+          password: 0
+        }
+      }
+    ]
+    return await this.collection().aggregate(pipeline).toArray();
   }
 }
