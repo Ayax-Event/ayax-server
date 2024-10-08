@@ -38,7 +38,7 @@ export async function middleware(request) {
   if (
     request.nextUrl.pathname.startsWith("/api/user-events") ||
     request.nextUrl.pathname.startsWith("/api/current-user") ||
-    request.nextUrl.pathname.startsWith("/api/event-delete") ||
+    request.nextUrl.pathname.startsWith("/api/event-edit") ||
     request.nextUrl.pathname.startsWith("/api/change-password") ||
     request.nextUrl.pathname.startsWith("/api/addAdmin") ||
     request.nextUrl.pathname.startsWith("/api/add-event") ||
@@ -82,7 +82,7 @@ export const config = {
   matcher: [
     "/api/user-events/:path*",
     "/api/current-user/:path*",
-    "/api/event-delete/:path*",
+    "/api/event-edit/:path*",
     "/api/change-password/:path*",
     "/api/addAdmin/:path*",
     "/api/user-request/:path*",

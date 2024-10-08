@@ -18,8 +18,7 @@ export const POST = async (request) => {
         }
 
         const findRequest = await Requestuser.findById(requestId)
-        console.log(findRequest, "findreq api/approve-request");
-
+        // console.log(findRequest, "findreq api/approve-request");
         if (!findRequest) {
             return Response.json({ message: "Request not found" }, { status: 404 })
         }

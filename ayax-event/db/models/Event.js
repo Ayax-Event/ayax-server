@@ -189,12 +189,12 @@ export default class Event {
       userId: new ObjectId(userId),
       categoryId: new ObjectId(categoryId),
       description: description,
-      location: { longtitude, latitude }, // TODO: use a library to handle geolocation
+      location: { longtitude, latitude }, 
       tags: tags,
       thumbnail: thumbnailUrl,
       images: imageUrls,
       dateOfEvent: dateOfEvent,
-      isActive: true,
+      isActive: "active",
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -212,5 +212,15 @@ export default class Event {
     return await this.collection()
       .deleteOne({ _id: new ObjectId(String(eventId)) })
       .next();
+  }
+  static async updateStatus(eventId, isActive) {
+    console.log("eventId models: ", eventId);
+
+    return await this.collection().updateOne(
+      { _id: new ObjectId(String(eventId)) },
+      {
+        $set: { isActive },
+      }
+    );
   }
 }
