@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { cn } from "../../lib/utils";
-import poppins from "../../font"
+import { poppins } from "../../font";
 
 export default function Login() {
   const [user, setUser] = useState({ email: "", password: "" });

@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { poppins, poppinsmedium } from "../../font";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { getCookie } from "cookies-next";
 
 export default function HomePage() {
   const [data, setData] = useState([]);
