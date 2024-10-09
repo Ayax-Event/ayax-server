@@ -279,13 +279,7 @@ export default class Event {
     console.log("new event being created: ", newEvent);
     return await this.collection().insertOne(newEvent);
   }
-  static async update(
-    _id,
-    eventName,
-    description,
-    tags,
-    categoryId,) {
-
+  static async update(_id, eventName, description, tags, categoryId) {
     const event = {
       eventName,
       description,
@@ -298,7 +292,7 @@ export default class Event {
 
     return await this.collection().updateOne(
       { _id: new ObjectId(_id) },
-      { $set: event  }
+      { $set: event }
     );
   }
   static async delete(eventId) {

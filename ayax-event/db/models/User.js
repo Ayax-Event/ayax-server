@@ -9,7 +9,6 @@ export const hashPassword = (password) => {
   return bcryptjs.hashSync(password, salt);
 };
 
-
 export const PasswordSchema = z.string().min(8);
 
 export const UserSchema = z.object({
@@ -121,5 +120,14 @@ export default class User {
     };
 
     return { data, pagination };
+  }
+
+  static async updateProfilePic(userId, profilePic) {
+    return this.collection().updateOne(
+      { _id: new ObjectId(String(userId)) },
+      {
+        $set: { profilepict: profilePic },
+      }
+    );
   }
 }

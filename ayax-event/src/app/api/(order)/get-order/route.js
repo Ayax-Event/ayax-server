@@ -3,7 +3,10 @@ import User from "../../../../../db/models/User";
 
 export async function GET(request) {
   try {
+    console.log("masuk");
     const userId = request.headers.get("x-user-id");
+
+    console.log("userId: ", userId);
     const filter = {};
     const sort = {};
 
@@ -11,11 +14,10 @@ export async function GET(request) {
       if (key.startsWith("filter_")) {
         const filterKey = key.replace("filter_", "");
 
-        // Split the filter value if it's a comma-separated string
         if (filterKey === "status") {
-          filter[filterKey] = value.split(","); // Split the string into an array
+          filter[filterKey] = value.split(",");
         } else {
-          filter[filterKey] = value; // Other filters can remain as is
+          filter[filterKey] = value;
         }
       } else if (key.startsWith("sort_")) {
         const sortKey = key.replace("sort_", "");
