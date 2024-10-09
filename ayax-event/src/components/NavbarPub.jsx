@@ -1,3 +1,4 @@
+import { IconSettings } from "@tabler/icons-react";
 import React from "react";
 
 export default function Navbar() {
@@ -48,7 +49,7 @@ export default function Navbar() {
                 className="block py-2 px-3 text-white bg-black rounded md:bg-transparent md:text-black md:p-0 dark:text-white md:dark:text-black"
                 aria-current="page"
               >
-                Login
+                <IconSettings />
               </a>
             </li>
           </ul>

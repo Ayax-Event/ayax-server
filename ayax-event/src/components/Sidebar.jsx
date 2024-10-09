@@ -7,6 +7,7 @@ import {
   IconUserCheck,
   IconUserEdit,
   IconUserPentagon,
+  IconUserPlus,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -59,7 +60,7 @@ export default function SidebarCMS() {
       label: "Add User",
       href: "/add-user",
       icon: (
-        <IconUserEdit className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+        <IconUserPlus className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {

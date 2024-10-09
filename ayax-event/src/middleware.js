@@ -14,7 +14,7 @@ export async function middleware(request) {
     request.nextUrl.pathname.startsWith("/add-user")
   ) {
     if (!authorization) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/public-event", request.url));
     }
     const [type, token] = authorization.split(" ");
     if (type !== "Bearer" || !token) {
@@ -43,11 +43,7 @@ export async function middleware(request) {
     request.nextUrl.pathname.startsWith("/api/addAdmin") ||
     request.nextUrl.pathname.startsWith("/api/add-event") ||
     request.nextUrl.pathname.startsWith("/api/user-request") ||
-    request.nextUrl.pathname.startsWith("/api/approve-request") ||
-    request.nextUrl.pathname.startsWith("/api/get-order") ||
-    request.nextUrl.pathname.startsWith("/api/create-order") ||
-    request.nextUrl.pathname.startsWith("/api/checkin-order") ||
-    request.nextUrl.pathname.startsWith("/api/event-report")
+    request.nextUrl.pathname.startsWith("/api/approve-request")
   ) {
     if (!authorization) {
       return Response.json({ message: "Unauthorized" }, { status: 401 });
@@ -91,10 +87,6 @@ export const config = {
     "/api/user-request/:path*",
     "/api/add-event/:path*",
     "/api/approve-request/:path*",
-    "/api/get-order/:path*",
-    "/api/create-order/:path*",
-    "/api/checkin-order/:path*",
-    "/api/event-report/:path*",
     "/",
     "/eo-list",
     "/add-user",
