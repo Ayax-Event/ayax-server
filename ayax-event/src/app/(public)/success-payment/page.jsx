@@ -1,9 +1,9 @@
-import { TypewriterEffectSmoothDemo } from "@/components/Typewriter";
+import EnhancedPaymentSuccess from "@/components/Typewriter";
 
 export default function SuccessPaymentPage() {
   return (
     <div>
-      <TypewriterEffectSmoothDemo />
+      <EnhancedPaymentSuccess />
     </div>
   );
 }

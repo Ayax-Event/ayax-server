@@ -5,7 +5,6 @@ import {
   IconArrowLeft,
   IconHome2,
   IconUserCheck,
-  IconUserEdit,
   IconUserPentagon,
   IconUserPlus,
 } from "@tabler/icons-react";
