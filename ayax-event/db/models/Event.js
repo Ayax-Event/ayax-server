@@ -279,10 +279,27 @@ export default class Event {
     console.log("new event being created: ", newEvent);
     return await this.collection().insertOne(newEvent);
   }
-  static async update(event) {
-    EventSchema.parse(event);
+  static async update(
+    _id,
+    eventName,
+    description,
+    tags,
+    categoryId,) {
 
-    return await this.collection().updateMany(event).next();
+    const event = {
+      eventName,
+      description,
+      tags,
+      categoryId,
+      updatedAt: new Date(),
+    };
+
+    // console.log(event, "after schema event in model");
+
+    return await this.collection().updateOne(
+      { _id: new ObjectId(_id) },
+      { $set: event  }
+    );
   }
   static async delete(eventId) {
     console.log("eventId models: ", eventId);
