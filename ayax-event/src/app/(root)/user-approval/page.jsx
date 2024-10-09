@@ -35,7 +35,7 @@ export default function UpgradeRolePage() {
         body: JSON.stringify({ requestId, isApprove }),
       });
       await res.json();
-      fetchUserPending();
+      await fetchUserPending();
     } catch (error) {
       console.log(error);
     }

@@ -46,15 +46,15 @@ export default function HomePage() {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+
       const result = await response.json();
-      fetchData();
-      console.log("Status updated successfully:", result);
+      await fetchData();
     } catch (error) {
       console.error("Error updating status:", error);
     }
   };
 
-  const handleUpdate = async (eventId, isActive) => {
+  const handleUpdate = (eventId, isActive) => {
     handleUpdateStatus(eventId, isActive);
   };
 

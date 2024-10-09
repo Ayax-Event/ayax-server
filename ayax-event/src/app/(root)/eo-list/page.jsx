@@ -155,7 +155,10 @@ export default function EoListPage() {
             hasMore={pagination.hasNextPage}
             loader={<h4>Loading...</h4>}
             endMessage={
-              <p className={`${poppinsmedium.className}`} style={{ textAlign: "center" }}>
+              <p
+                className={`${poppinsmedium.className}`}
+                style={{ textAlign: "center" }}
+              >
                 No more Event Organizers to load
               </p>
             }
@@ -188,12 +191,6 @@ export default function EoListPage() {
                   >
                     Location
                   </th>
-                  <th
-                    scope="col"
-                    className={`${poppinsmedium.className} px-6 py-3`}
-                  >
-                    Action
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -205,7 +202,10 @@ export default function EoListPage() {
                   </tr>
                 ) : (
                   data.map((eo) => (
-                    <tr key={eo._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <tr
+                      key={eo._id}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    >
                       <th
                         scope="row"
                         className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
@@ -240,14 +240,6 @@ export default function EoListPage() {
                               eo.location?.latitude
                             )}
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <a
-                          href="#"
-                          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                        >
-                          Edit
-                        </a>
                       </td>
                     </tr>
                   ))
