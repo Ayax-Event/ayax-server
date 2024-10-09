@@ -46,6 +46,7 @@ export default class Order {
       }
     );
   }
+
   static async findOrderById(orderId) {
     return await this.collection()
       .aggregate([
@@ -156,6 +157,13 @@ export default class Order {
     return this.collection().updateOne(
       { _id: new ObjectId(orderId) },
       { $set: { checkedIn: new Date() } }
+    );
+  }
+
+  static async addPaymentUrl(orderId, url) {
+    return this.collection().updateOne(
+      { _id: orderId },
+      { $set: { paymentUrl: url } }
     );
   }
 }

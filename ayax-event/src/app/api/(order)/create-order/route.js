@@ -63,7 +63,11 @@ export async function POST(request) {
     };
 
     const transactionToken = await snap.createTransaction(parameter);
-
+    const addUrl = await Order.addPaymentUrl(
+      newOrder.insertedId,
+      transactionToken.redirect_url
+    );
+    console.log(addUrl, "<<<<<<<<<<<<<<< add url");
     return Response.json(transactionToken, { status: 200 });
   } catch (error) {
     console.log(error);
