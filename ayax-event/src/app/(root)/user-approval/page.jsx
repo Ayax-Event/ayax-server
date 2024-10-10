@@ -12,14 +12,17 @@ export default function UpgradeRolePage() {
     console.log(requestId, isApprove);
     try {
       const token = getCookie("Authorization");
-      const res = await fetch(`http://localhost:3000/api/approve-request`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-        body: JSON.stringify({ requestId, isApprove }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/approve-request`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({ requestId, isApprove }),
+        }
+      );
       await res.json();
       await fetchUserPending();
     } catch (error) {
@@ -34,7 +37,7 @@ export default function UpgradeRolePage() {
   const fetchUserPending = async () => {
     setLoading(true);
     try {
-      let url = `http://localhost:3000/api/user-request`;
+      let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/user-request`;
 
       const response = await fetch(url, { cache: "no-store" });
       const result = await response.json();

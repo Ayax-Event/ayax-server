@@ -15,7 +15,9 @@ export default function SidebarCMS() {
   const [data, setData] = useState([]);
   const fetchUser = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/current-user`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/current-user`
+      );
       const result = await response.json();
 
       setData(result);

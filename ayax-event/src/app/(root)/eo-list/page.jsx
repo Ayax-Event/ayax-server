@@ -56,7 +56,7 @@ export default function EoListPage() {
   const fetchData = async (pageNum = page, search = searchTerm) => {
     setLoading(true);
     try {
-      let url = `http://localhost:3000/api/eo-list`;
+      let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/eo-list`;
       const params = new URLSearchParams();
 
       params.append("page", pageNum);

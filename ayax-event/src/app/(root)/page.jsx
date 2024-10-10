@@ -35,13 +35,16 @@ export default function HomePage() {
   const handleUpdateStatus = async (eventId, isActive) => {
     try {
       console.log(eventId, isActive);
-      const response = await fetch(`http://localhost:3000/api/event-edit`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ eventId, isActive }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/event-edit`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ eventId, isActive }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -61,7 +64,7 @@ export default function HomePage() {
   const fetchData = async (pageNum = page, search = searchTerm) => {
     setLoading(true);
     try {
-      let url = `http://localhost:3000/api/event`;
+      let url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/event`;
       const params = new URLSearchParams();
       console.log("Fetching data...");
 
