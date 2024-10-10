@@ -5,6 +5,7 @@ export async function GET(request, { params }) {
     const _id = params._id;
 
     const event = await Event.findById(_id);
+    console.log(event, "<<<<<<<<<<<<<<< event");
     if (!event) {
       throw { message: "Event not found", status: 404 };
     }

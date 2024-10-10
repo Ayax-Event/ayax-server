@@ -22,21 +22,19 @@ export default class Event {
     return database.collection("events");
   }
 
-  static async findAll(page, search, limit, sort, filter) {
+  static async findAll(page, search, limit, sort, filter, userId) {
     const itemsPerPage = limit ? Number(limit) : 6;
     const currentPage = !page ? 1 : Number(page);
     const skip = (currentPage - 1) * itemsPerPage;
 
     let matchStage = {};
 
-    // Handle search
     if (Object.keys(search).length > 0) {
       Object.keys(search).forEach((key) => {
         matchStage[key] = { $regex: search[key], $options: "si" };
       });
     }
 
-    // Handle filter
     if (Object.keys(filter).length > 0) {
       Object.keys(filter).forEach((key) => {
         if (key === "categoryId") {
@@ -47,7 +45,10 @@ export default class Event {
       });
     }
 
-    // Handle sort
+    if (userId) {
+      matchStage.userId = new ObjectId(userId);
+    }
+
     const sortStage = {};
     if (Object.keys(sort).length > 0) {
       Object.keys(sort).forEach((key) => {
@@ -128,6 +129,7 @@ export default class Event {
   }
 
   static async findById(_id) {
+    console.log(_id);
     const pipeline = [
       {
         $match: {
