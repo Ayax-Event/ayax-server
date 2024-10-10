@@ -17,20 +17,21 @@ export default function EoListPage() {
   const [page, setPage] = useState(1);
   const [locations, setLocations] = useState({});
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    setPage(1);
-    fetchData(1, searchTerm.trim());
-  };
+  // buat search
+  // const handleSearch = (e) => {
+  //   e.preventDefault();
+  //   setPage(1);
+  //   fetchData(1, searchTerm.trim());
+  // };
 
-  const handleInputChange = (e) => {
-    const newTerm = e.target.value;
-    setSearchTerm(newTerm);
-    if (newTerm === "") {
-      setPage(1);
-      fetchData(1, "");
-    }
-  };
+  // const handleInputChange = (e) => {
+  //   const newTerm = e.target.value;
+  //   setSearchTerm(newTerm);
+  //   if (newTerm === "") {
+  //     setPage(1);
+  //     fetchData(1, "");
+  //   }
+  // };
 
   const formatCoordinates = (longitude, latitude) => {
     if (!longitude || !latitude) return "Location not available";
@@ -52,7 +53,7 @@ export default function EoListPage() {
     }
   };
 
-  const fetchData = async (pageNum = 1, search = searchTerm) => {
+  const fetchData = async (pageNum = page, search = searchTerm) => {
     setLoading(true);
     try {
       let url = `http://localhost:3000/api/eo-list`;
@@ -60,7 +61,7 @@ export default function EoListPage() {
 
       params.append("page", pageNum);
       if (search) {
-        params.append("search", search);
+        params.append("search_", search);
       }
 
       url += `?${params.toString()}`;
@@ -117,7 +118,7 @@ export default function EoListPage() {
             Event Organizer List
           </div>
           <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            {/* <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
                 className="w-4 h-4 text-gray-500 dark:text-gray-400"
                 aria-hidden="true"
@@ -133,19 +134,19 @@ export default function EoListPage() {
                   d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                 />
               </svg>
-            </div>
-            <form onChange={handleSearch}>
+            </div> */}
+            {/* <form onChange={handleSearch}>
               <input
                 type="text"
                 value={searchTerm}
                 onChange={handleInputChange}
-                className="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className={`${poppinsmedium.className} block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                 placeholder="Search for event organizers"
               />
               <button type="submit" className="hidden">
                 Search
               </button>
-            </form>
+            </form> */}
           </div>
         </div>
         <div id="infinite-table">
@@ -226,14 +227,10 @@ export default function EoListPage() {
                       </th>
                       <td className="px-6 py-4">{eo.username}</td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />
-                          {eo.email}
-                        </div>
+                        <div className="flex items-center">{eo.email}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
-                          <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />
                           {locations[eo._id] ||
                             formatCoordinates(
                               eo.location?.longitude,

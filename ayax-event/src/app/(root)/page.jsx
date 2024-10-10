@@ -278,7 +278,7 @@ export default function HomePage() {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center">
-                            {new Date(event.creator.createdAt).toDateString()}
+                            {new Date(event.createdAt).toDateString()}
                           </div>
                         </td>
                         <td className="px-6 py-4">

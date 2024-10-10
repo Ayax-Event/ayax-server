@@ -8,20 +8,6 @@ export default function UpgradeRolePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-
-    fetchUserPending(searchTerm.trim());
-  };
-
-  const handleInputChange = (e) => {
-    const newTerm = e.target.value;
-    setSearchTerm(newTerm);
-    if (newTerm === "") {
-      fetchUserPending("");
-    }
-  };
-
   const handleUserAction = async (requestId, isApprove) => {
     console.log(requestId, isApprove);
     try {
@@ -72,37 +58,6 @@ export default function UpgradeRolePage() {
         <div className="flex items-center justify-between flex-wrap md:flex-row bg-white dark:bg-gray-900 pb-4 pl-4 pr-4 pt-4">
           <div className={`font-bold ${poppins.className}`}>
             User Approval List
-          </div>
-          <div className="relative">
-            <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg
-                className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                />
-              </svg>
-            </div>
-            <form onChange={handleSearch}>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={handleInputChange}
-                className={`${poppinsmedium.className} block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-                placeholder="Search for event organizers"
-              />
-              <button type="submit" className="hidden">
-                Search
-              </button>
-            </form>
           </div>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
